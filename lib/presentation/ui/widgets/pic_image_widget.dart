@@ -11,8 +11,7 @@ class PicImagePopup extends StatelessWidget {
       {BuildContext? context}) async {
     try {
       final XFile? pickedFile = await _picker.pickImage(
-        source: source,
-      );
+          source: source, maxWidth: 600, maxHeight: 800);
       _callBack(pickedFile!.path);
     } catch (e) {
       _callBack('');

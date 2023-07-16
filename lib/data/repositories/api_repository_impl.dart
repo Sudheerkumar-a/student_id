@@ -23,10 +23,10 @@ class ApisRepositoryImpl implements ApisRepository {
   ApisRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<Zones>>> getZones() async {
+  Future<Either<Failure, List<Zones>>> getZones(String lookupId) async {
     try {
-      final zonesModels =
-          await remoteDataSource.getZones(path: "master/zone?lookupId=1");
+      final zonesModels = await remoteDataSource.getZones(
+          path: "master/zone?lookupId=$lookupId");
       final zones = zonesModels.map((e) => e.toZone).toList();
       return Right(zones);
     } on ServerException catch (error) {

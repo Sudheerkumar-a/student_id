@@ -11,7 +11,7 @@ import '../../core/errors/exceptions.dart';
 import '../../core/utils/mock_data.dart';
 import '../model/login_model.dart';
 
-const BASE_URL = "http://20.198.72.105:8956/v1";
+const BASE_URL = "http://20.204.30.200:8956/v1";
 
 abstract class RemoteDataSource {
   Future<List<ZoneModel>> getZones({required String path});

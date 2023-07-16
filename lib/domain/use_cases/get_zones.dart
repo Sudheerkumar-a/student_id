@@ -13,7 +13,7 @@ class GetZones {
   Future<Either<Failure, List<Zones>>> execute(ListType listType,
       {String lookupId = ''}) async {
     if (listType == ListType.zones) {
-      return repository.getZones();
+      return repository.getZones(lookupId);
     } else if (listType == ListType.institutes) {
       return repository.getInstitutes(lookupId: lookupId);
     } else if (listType == ListType.colleges) {

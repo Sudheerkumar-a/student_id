@@ -10,7 +10,7 @@ import 'package:student_id/domain/requests/student_request.dart';
 import '../../core/errors/failures.dart';
 
 abstract class ApisRepository {
-  Future<Either<Failure, List<Zones>>> getZones();
+  Future<Either<Failure, List<Zones>>> getZones(String lookupId);
   Future<Either<Failure, List<Zones>>> getInstitutes(
       {required String lookupId});
   Future<Either<Failure, List<Zones>>> getColleges();

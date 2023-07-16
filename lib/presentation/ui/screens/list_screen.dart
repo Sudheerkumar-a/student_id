@@ -97,12 +97,17 @@ class _ListWidgetState extends State<ListWidget> {
         .isNotEmpty) {
       listType = ListType.classesColleges;
     }
+    var lookupId = _agrs?.zoneId ?? '';
+    if (listType == ListType.zones) {
+      lookupId =
+          '${(_agrs?.instituteType ?? InstituteType.schools) == InstituteType.schools ? 1 : 2}';
+    }
     _setAppBar();
     return BlocProvider<ListBloc>(
       create: (context) => ListBloc(
           getZonesUsecase:
               GetZones(repository: context.read<ApisRepositoryImpl>()))
-        ..getData(listType, lookupId: _agrs?.zoneId ?? ''),
+        ..getData(listType, lookupId: lookupId),
       child: Scaffold(
         appBar: _appBar,
         body: BlocBuilder<ListBloc, ListState>(
