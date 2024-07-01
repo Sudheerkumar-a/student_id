@@ -66,14 +66,14 @@ class ErrorPopupBuilder<BLOC extends BlocBase<STATE>, STATE extends BaseState>
                 children: [
                   Text(
                     error.title,
-                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                         ),
                   ),
                   Text(
                     error.description,
-                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.white,
                         ),
                   ),

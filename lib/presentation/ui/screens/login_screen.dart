@@ -60,7 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   AppRoutes.listScreen,
                   (Route<dynamic> route) => false,
                   arguments: ListWidgetArguments(
-                      InstituteType.schools, ListType.classes),
+                      PrefUtils().getBoolValue(SharedPreferencesString.isSchool)
+                          ? InstituteType.schools
+                          : InstituteType.colleges,
+                      PrefUtils().getBoolValue(SharedPreferencesString.isSchool)
+                          ? ListType.classes
+                          : ListType.colleges),
                 )
               }
             else if (state is LoginWithError)

@@ -62,11 +62,7 @@ List<ZoneModel> mockClasses = [
 List<ZoneModel> mockColleges = [
   ZoneModel(id: 'FIRST_YEAR', name: '1st Year'),
   ZoneModel(id: 'SECOND_YEAR', name: '2nd Year'),
-];
-
-List<ZoneModel> _colleges = [
-  ZoneModel(id: 1, name: '1st Year'),
-  ZoneModel(id: 1, name: '2nd Year'),
+  ZoneModel(id: 'LONG_TERM', name: 'Long Term'),
 ];
 
 String loginResponse =

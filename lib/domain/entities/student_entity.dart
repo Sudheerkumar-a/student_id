@@ -10,6 +10,7 @@ class StudentEntity {
   final String? transport;
   final String? schoolName;
   final String? className;
+  final String? sectionName;
 
   const StudentEntity(
       {this.id,
@@ -22,7 +23,8 @@ class StudentEntity {
       this.schoolId,
       this.transport,
       this.schoolName = '',
-      this.className = ''});
+      this.className = '',
+      this.sectionName = ''});
   @override
   List<Object?> get props => [
         id,

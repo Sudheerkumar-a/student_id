@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:student_id/app_routes.dart';
 import 'package:student_id/core/constants/assets.dart';
+import 'package:student_id/core/utils/pref_utils.dart';
 import 'package:student_id/presentation/ui/screens/list_screen.dart';
 
 class StudentTeacherScreen extends StatelessWidget {
@@ -32,10 +33,13 @@ class StudentTeacherScreen extends StatelessWidget {
                               BorderRadius.circular(13)) // Shadow Color
                       ),
                   onPressed: () => {
-                    Navigator.pushNamed(
-                      context,
-                      AppRoutes.schoolsColleges,
-                    )
+                    Navigator.pushNamed(context, AppRoutes.listScreen,
+                        arguments: ListWidgetArguments(
+                            PrefUtils().getBoolValue(
+                                    SharedPreferencesString.isSchool)
+                                ? InstituteType.schools
+                                : InstituteType.colleges,
+                            ListType.zones))
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 30),

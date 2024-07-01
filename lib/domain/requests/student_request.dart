@@ -5,6 +5,7 @@ class StudentRequest {
   final String instituteId;
   final String classId;
   final String studentName;
+  final String sectionName;
   final String admissionNumber;
   final String idPath;
   final bool isAccepted;
@@ -17,6 +18,7 @@ class StudentRequest {
       this.instituteId = '',
       this.classId = '',
       this.studentName = '',
+      this.sectionName = '',
       this.admissionNumber = '',
       this.idPath = '',
       this.isAccepted = false,

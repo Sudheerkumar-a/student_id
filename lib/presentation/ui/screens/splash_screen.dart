@@ -24,7 +24,7 @@ class _SplashState extends State<SplashScreen> {
                   true)
                 {
                   Navigator.of(context).popAndPushNamed(
-                    AppRoutes.studentTeacherScreen,
+                    AppRoutes.schoolsColleges,
                   )
                 }
               else

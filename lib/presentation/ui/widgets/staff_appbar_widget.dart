@@ -18,7 +18,7 @@ class StaffAppBar extends StatelessWidget implements PreferredSizeWidget {
             PrefUtils().setStringValue(SharedPreferencesString.userName, '');
             Navigator.pushNamedAndRemoveUntil(
               context,
-              AppRoutes.studentTeacherScreen,
+              AppRoutes.schoolsColleges,
               (Route<dynamic> route) => false,
             );
           },

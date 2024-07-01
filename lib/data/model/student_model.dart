@@ -10,6 +10,7 @@ class StudentModel extends Equatable {
   final String? bloodGroup;
   final int? schoolId;
   final String? classNo;
+  final String? sectionName;
   final String? infoStatus;
   final String? profileUrl;
 
@@ -20,6 +21,7 @@ class StudentModel extends Equatable {
     this.bloodGroup,
     this.schoolId,
     this.classNo,
+    this.sectionName,
     this.infoStatus,
     this.profileUrl,
   });
@@ -32,6 +34,7 @@ class StudentModel extends Equatable {
       bloodGroup: json['bloodGroup'],
       schoolId: json['schoolId'],
       classNo: json['classNo'],
+      sectionName: json['sectionName'],
       infoStatus: json['infoStatus'],
       profileUrl: '$BASE_URL${json['imageUrl']}',
     );
@@ -59,5 +62,6 @@ extension SourceModelExtension on StudentModel {
       bloodGroup: bloodGroup,
       infoStatus: infoStatus,
       schoolId: schoolId,
-      classNo: classNo);
+      classNo: classNo,
+      sectionName: sectionName);
 }

@@ -30,7 +30,7 @@ class AppRoutes {
       AppRoutes.schoolsColleges: (context) => const SchoolCollegeScreen(),
       AppRoutes.loginScreen: (context) => const LoginScreen(),
       AppRoutes.listScreen: (context) => ListWidget(),
-      AppRoutes.studentDetails: (context) => const StudentDetails(),
+      AppRoutes.studentDetails: (context) => StudentDetails(),
       AppRoutes.listStudentsScreen: (context) => ListStudents(),
       AppRoutes.takePictureScreen: (context) => const TakePictureScreen(),
       AppRoutes.studentIdPrewviewScreen: (context) => StudentIdPreviewScreen(),

@@ -81,7 +81,7 @@ class ApisRepositoryImpl implements ApisRepository {
   @override
   Future<Either<Failure, List<Zones>>> getClassesColleges() async {
     try {
-      final zonesModels = mockClasses;
+      final zonesModels = List<ZoneModel>.from(mockClasses, growable: true);
       zonesModels.addAll(mockColleges);
       // await remoteDataSource.getZones();
       final zones = zonesModels.map((e) => e.toZone).toList();

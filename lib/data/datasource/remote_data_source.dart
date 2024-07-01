@@ -8,10 +8,9 @@ import 'package:student_id/data/model/zone_model.dart';
 import 'package:student_id/domain/requests/student_request.dart';
 
 import '../../core/errors/exceptions.dart';
-import '../../core/utils/mock_data.dart';
 import '../model/login_model.dart';
 
-const BASE_URL = "http://20.204.30.200:8956/v1";
+const BASE_URL = "http://ec2-100-25-198-132.compute-1.amazonaws.com:8956/v1";
 
 abstract class RemoteDataSource {
   Future<List<ZoneModel>> getZones({required String path});
@@ -160,6 +159,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         'schoolId': studentRequest.instituteId,
         'classNo': studentRequest.classId,
         'name': studentRequest.studentName,
+        'sectionName': studentRequest.sectionName,
         'idNumber': studentRequest.admissionNumber,
         'transport': studentRequest.transport,
       });

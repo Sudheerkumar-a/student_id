@@ -36,9 +36,10 @@ class SchoolCollegeScreen extends StatelessWidget {
                   onPressed: () => {
                     PrefUtils()
                         .setBoolValue(SharedPreferencesString.isSchool, true),
-                    Navigator.pushNamed(context, AppRoutes.listScreen,
-                        arguments: ListWidgetArguments(
-                            InstituteType.schools, ListType.zones))
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.studentTeacherScreen,
+                    )
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 30),
@@ -72,9 +73,10 @@ class SchoolCollegeScreen extends StatelessWidget {
                   onPressed: () => {
                     PrefUtils()
                         .setBoolValue(SharedPreferencesString.isSchool, false),
-                    Navigator.pushNamed(context, AppRoutes.listScreen,
-                        arguments: ListWidgetArguments(
-                            InstituteType.colleges, ListType.zones))
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.studentTeacherScreen,
+                    )
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 30),

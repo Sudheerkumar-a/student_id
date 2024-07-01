@@ -4,14 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student_id/app_routes.dart';
 import 'package:student_id/domain/entities/student_entity.dart';
-import 'package:student_id/presentation/ui/widgets/college_id_card_preview.dart';
-import 'package:student_id/presentation/ui/widgets/school_id_card_preview.dart';
 import 'package:student_id/presentation/ui/widgets/photo_instructions.dart';
 import 'package:student_id/presentation/ui/widgets/pic_image_widget.dart';
-import 'package:student_id/presentation/ui/screens/teacher_review_screen.dart';
 
 class StudentDetails extends StatefulWidget {
-  const StudentDetails({super.key});
+  StudentDetails({super.key});
+  final _nameTextController = TextEditingController();
+  final _anTextController = TextEditingController();
+  final _sectionTextController = TextEditingController();
 
   @override
   State<StatefulWidget> createState() => _StudentDetailsState();
@@ -19,8 +19,6 @@ class StudentDetails extends StatefulWidget {
 
 class _StudentDetailsState extends State<StudentDetails> {
   late List<CameraDescription> camera;
-  final _nameTextController = TextEditingController();
-  final _anTextController = TextEditingController();
   bool _isNameValid = true;
   bool _isANValid = true;
   String? _transportType = 'own';
@@ -51,8 +49,9 @@ class _StudentDetailsState extends State<StudentDetails> {
         context,
         AppRoutes.studentIdPrewviewScreen,
         arguments: StudentEntity(
-            name: _nameTextController.text,
-            admissionNumber: _anTextController.text,
+            name: widget._nameTextController.text,
+            admissionNumber: widget._anTextController.text,
+            sectionName: widget._sectionTextController.text,
             profileUrl: filePath,
             schoolId: args.schoolId ?? 0,
             schoolName: args.schoolName,
@@ -66,6 +65,8 @@ class _StudentDetailsState extends State<StudentDetails> {
   @override
   Widget build(BuildContext context) {
     args = ModalRoute.of(context)!.settings.arguments as StudentEntity;
+    final isCollege =
+        ["FIRST_YEAR", "SECOND_YEAR", "LONG_TERM"].contains(args.classNo);
     return Scaffold(
       appBar: AppBar(title: const Text('Student Details')),
       body: SingleChildScrollView(
@@ -77,8 +78,7 @@ class _StudentDetailsState extends State<StudentDetails> {
             children: [
               const SizedBox(height: 20),
               TextFormField(
-                controller: _nameTextController,
-                maxLength: 30,
+                controller: widget._nameTextController,
                 keyboardType: TextInputType.name,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp("[a-zA-Z. ]")),
@@ -93,6 +93,7 @@ class _StudentDetailsState extends State<StudentDetails> {
                     errorText: _isNameValid ? null : 'Please enter Name'),
                 style: const TextStyle(color: Colors.black, fontSize: 14),
               ),
+              const SizedBox(height: 5),
               Container(
                 color: const Color.fromARGB(255, 245, 245, 245),
                 padding: const EdgeInsets.all(5),
@@ -102,7 +103,7 @@ class _StudentDetailsState extends State<StudentDetails> {
                 ),
               ),
               TextFormField(
-                controller: _anTextController,
+                controller: widget._anTextController,
                 keyboardType: TextInputType.name,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -117,6 +118,24 @@ class _StudentDetailsState extends State<StudentDetails> {
                 style: const TextStyle(color: Colors.black, fontSize: 14),
               ),
               const SizedBox(height: 20),
+              if (isCollege) ...{
+                TextFormField(
+                  controller: widget._sectionTextController,
+                  keyboardType: TextInputType.name,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                  ],
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: InputDecoration(
+                      // border: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.all(Radius.circular(15)),
+                      // ),
+                      label: const Text('Section'),
+                      errorText: _isANValid ? null : 'Please enter Section'),
+                  style: const TextStyle(color: Colors.black, fontSize: 14),
+                ),
+                const SizedBox(height: 20),
+              },
               Text(
                 'Transport Type',
                 style: GoogleFonts.roboto(
@@ -156,8 +175,9 @@ class _StudentDetailsState extends State<StudentDetails> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        _isNameValid = _nameTextController.text.isNotEmpty;
-                        _isANValid = _anTextController.text.isNotEmpty;
+                        _isNameValid =
+                            widget._nameTextController.text.isNotEmpty;
+                        _isANValid = widget._anTextController.text.isNotEmpty;
                       });
                       if (_isANValid && _isNameValid) {
                         //_open_Image_picker();

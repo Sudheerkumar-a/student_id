@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_id/app_routes.dart';
 import 'package:student_id/core/utils/pref_utils.dart';
 import 'package:student_id/data/repositories/api_repository_impl.dart';
@@ -93,10 +92,10 @@ class _ListWidgetState extends State<ListWidget> {
   Widget build(BuildContext context) {
     _agrs = ModalRoute.of(context)!.settings.arguments as ListWidgetArguments;
     var listType = _agrs?.listType ?? ListType.zones;
-    if ((PrefUtils().getStringValue(SharedPreferencesString.userName) ?? '')
-        .isNotEmpty) {
-      listType = ListType.classesColleges;
-    }
+    // if ((PrefUtils().getStringValue(SharedPreferencesString.userName) ?? '')
+    //     .isNotEmpty) {
+    //   listType = ListType.classesColleges;
+    // }
     var lookupId = _agrs?.zoneId ?? '';
     if (listType == ListType.zones) {
       lookupId =

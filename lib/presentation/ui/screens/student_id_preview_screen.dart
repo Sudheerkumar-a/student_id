@@ -44,7 +44,8 @@ class StudentIdPreviewScreen extends StatelessWidget {
               //     context, 'Alert', state.uploadIdEntitiy.message ?? ''),
               Widget idCard = SchoolIdCardPreview(args);
               if (args.classNo == 'FIRST_YEAR' ||
-                  args.classNo == 'SECOND_YEAR') {
+                  args.classNo == 'SECOND_YEAR' ||
+                  args.classNo == 'LONG_TERM') {
                 idCard = CollegeIdCardPreview(args);
               }
               await showDialog(context: context, builder: (context) => idCard);
@@ -115,6 +116,7 @@ class StudentIdPreviewScreen extends StatelessWidget {
                             zoneId: '1',
                             instituteId: '${args.schoolId ?? ''}',
                             classId: args.classNo ?? '',
+                            sectionName: args.sectionName ?? '',
                             studentName: args.name ?? '',
                             admissionNumber: args.admissionNumber ?? '',
                             idPath: args.profileUrl ?? '',

@@ -85,7 +85,7 @@ class CollegeIdCardPreview extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                'Section: XXXXXX',
+                'Section: ${studentEntity.sectionName}',
                 style: GoogleFonts.roboto(
                     textStyle: const TextStyle(
                   color: Colors.black,
