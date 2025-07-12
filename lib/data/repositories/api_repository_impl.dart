@@ -154,6 +154,21 @@ class ApisRepositoryImpl implements ApisRepository {
   }
 
   @override
+  Future<Either<Failure, UploadIdEntitiy>> uploadVisitor(
+      StudentRequest studentRequest) async {
+    try {
+      final uploadIdModel =
+          await remoteDataSource.uploadVisitor(studentRequest: studentRequest);
+      final uploadIdResponse = uploadIdModel.toUploadIdEntitiy;
+      return Right(uploadIdResponse);
+    } on ServerException catch (error) {
+      return Left(ServerFailure(message: error.message));
+    } catch (error) {
+      return Left(ServerFailure(message: error.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, UploadIdEntitiy>> updateStudentImage(
       StudentRequest studentRequest) async {
     try {
@@ -161,6 +176,21 @@ class ApisRepositoryImpl implements ApisRepository {
           studentRequest: studentRequest);
       final uploadIdResponse = uploadIdModel.toUploadIdEntitiy;
       return Right(uploadIdResponse);
+    } on ServerException catch (error) {
+      return Left(ServerFailure(message: error.message));
+    } catch (error) {
+      return Left(ServerFailure(message: error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, StudentEntity>> getStudentsById(
+      StudentRequest studentRequest) async {
+    try {
+      final studentModels = await remoteDataSource.getStudentsById(
+          studentRequest: studentRequest);
+      final studentResponse = studentModels.toStudentEntity;
+      return Right(studentResponse);
     } on ServerException catch (error) {
       return Left(ServerFailure(message: error.message));
     } catch (error) {

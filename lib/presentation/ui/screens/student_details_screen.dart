@@ -49,23 +49,32 @@ class _StudentDetailsState extends State<StudentDetails> {
         context,
         AppRoutes.studentIdPrewviewScreen,
         arguments: StudentEntity(
-            name: widget._nameTextController.text,
-            admissionNumber: widget._anTextController.text,
-            sectionName: widget._sectionTextController.text,
-            profileUrl: filePath,
-            schoolId: args.schoolId ?? 0,
-            schoolName: args.schoolName,
-            classNo: args.classNo,
-            className: args.className,
-            transport: _transportType),
+          name: (isCollege && args.className != 'STAFF')
+              ? widget._anTextController.text
+              : widget._nameTextController.text,
+          admissionNumber: widget._anTextController.text,
+          sectionName: (isCollege && args.className != 'STAFF')
+              ? widget._anTextController.text
+              : widget._sectionTextController.text,
+          profileUrl: filePath,
+          schoolId: args.schoolId ?? 0,
+          schoolName: args.schoolName,
+          classNo: args.classNo,
+          className: args.className,
+          transport: (isCollege && args.className != 'STAFF')
+              ? widget._anTextController.text
+              : _transportType,
+        ),
       );
     }
   }
 
+  bool isCollege = false;
+
   @override
   Widget build(BuildContext context) {
     args = ModalRoute.of(context)!.settings.arguments as StudentEntity;
-    final isCollege =
+    isCollege =
         ["FIRST_YEAR", "SECOND_YEAR", "LONG_TERM"].contains(args.classNo);
     return Scaffold(
       appBar: AppBar(title: const Text('Student Details')),
@@ -77,31 +86,33 @@ class _StudentDetailsState extends State<StudentDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              TextFormField(
-                controller: widget._nameTextController,
-                keyboardType: TextInputType.name,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp("[a-zA-Z. ]")),
-                ],
-                decoration: InputDecoration(
-                    // border: OutlineInputBorder(
-                    //   borderRadius: BorderRadius.all(Radius.circular(15)),
-                    // ),
-                    label: Text(args.className == 'STAFF'
-                        ? 'Teacher Name'
-                        : 'Student Name'),
-                    errorText: _isNameValid ? null : 'Please enter Name'),
-                style: const TextStyle(color: Colors.black, fontSize: 14),
-              ),
-              const SizedBox(height: 5),
-              Container(
-                color: const Color.fromARGB(255, 245, 245, 245),
-                padding: const EdgeInsets.all(5),
-                child: Text(
-                  'Ex : Chinta vera venkata naga kishore kumar\nChinta V.V.N.Kishore Kumar',
-                  style: GoogleFonts.roboto(),
+              if (!isCollege || args.className == 'STAFF') ...{
+                TextFormField(
+                  controller: widget._nameTextController,
+                  keyboardType: TextInputType.name,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z. ]")),
+                  ],
+                  decoration: InputDecoration(
+                      // border: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.all(Radius.circular(15)),
+                      // ),
+                      label: Text(args.className == 'STAFF'
+                          ? 'Teacher Name'
+                          : 'Student Name'),
+                      errorText: _isNameValid ? null : 'Please enter Name'),
+                  style: const TextStyle(color: Colors.black, fontSize: 14),
                 ),
-              ),
+                const SizedBox(height: 5),
+                Container(
+                  color: const Color.fromARGB(255, 245, 245, 245),
+                  padding: const EdgeInsets.all(5),
+                  child: Text(
+                    'Ex : Chinta vera venkata naga kishore kumar\nChinta V.V.N.Kishore Kumar',
+                    style: GoogleFonts.roboto(),
+                  ),
+                )
+              },
               TextFormField(
                 controller: widget._anTextController,
                 keyboardType: TextInputType.name,
@@ -117,8 +128,8 @@ class _StudentDetailsState extends State<StudentDetails> {
                     errorText: _isANValid ? null : 'Please enter Admission Id'),
                 style: const TextStyle(color: Colors.black, fontSize: 14),
               ),
-              const SizedBox(height: 20),
-              if (isCollege) ...{
+              //const SizedBox(height: 20),
+              if (isCollege && args.className == 'STAFF') ...{
                 TextFormField(
                   controller: widget._sectionTextController,
                   keyboardType: TextInputType.name,
@@ -136,38 +147,40 @@ class _StudentDetailsState extends State<StudentDetails> {
                 ),
                 const SizedBox(height: 20),
               },
-              Text(
-                'Transport Type',
-                style: GoogleFonts.roboto(
-                    textStyle: TextStyle(
-                  color: Colors.grey.shade800,
-                  fontSize: 14,
-                )),
-              ),
-              ListTile(
-                title: const Text('Own'),
-                leading: Radio<String>(
-                  value: 'own',
-                  groupValue: _transportType,
-                  onChanged: (String? value) {
-                    setState(() {
-                      _transportType = value;
-                    });
-                  },
+              if (!isCollege || args.className == 'STAFF') ...{
+                Text(
+                  'Transport Type',
+                  style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                    color: Colors.grey.shade800,
+                    fontSize: 14,
+                  )),
                 ),
-              ),
-              ListTile(
-                title: const Text('Institute'),
-                leading: Radio<String>(
-                  value: 'institute',
-                  groupValue: _transportType,
-                  onChanged: (String? value) {
-                    setState(() {
-                      _transportType = value;
-                    });
-                  },
+                ListTile(
+                  title: const Text('Own'),
+                  leading: Radio<String>(
+                    value: 'own',
+                    groupValue: _transportType,
+                    onChanged: (String? value) {
+                      setState(() {
+                        _transportType = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
+                ListTile(
+                  title: const Text('Institute'),
+                  leading: Radio<String>(
+                    value: 'institute',
+                    groupValue: _transportType,
+                    onChanged: (String? value) {
+                      setState(() {
+                        _transportType = value;
+                      });
+                    },
+                  ),
+                )
+              },
               const SizedBox(height: 30),
               Center(
                 child: SizedBox(
@@ -175,11 +188,11 @@ class _StudentDetailsState extends State<StudentDetails> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        _isNameValid =
-                            widget._nameTextController.text.isNotEmpty;
+                        // _isNameValid =
+                        //     widget._nameTextController.text.isNotEmpty;
                         _isANValid = widget._anTextController.text.isNotEmpty;
                       });
-                      if (_isANValid && _isNameValid) {
+                      if (_isANValid) {
                         //_open_Image_picker();
                         _showDialog();
                       }

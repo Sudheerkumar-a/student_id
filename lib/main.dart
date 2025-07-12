@@ -3,9 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:student_id/app_routes.dart';
 import 'package:student_id/data/datasource/remote_data_source.dart';
 import 'package:student_id/data/repositories/api_repository_impl.dart';
-import 'package:student_id/domain/use_cases/get_zones.dart';
 import 'package:provider/provider.dart';
-import 'package:student_id/domain/use_cases/login_usecases.dart';
 
 import 'core/utils/pref_utils.dart';
 import 'injection_container.dart' as di;

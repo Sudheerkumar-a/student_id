@@ -10,12 +10,14 @@ import 'package:student_id/domain/requests/student_request.dart';
 import '../../core/errors/exceptions.dart';
 import '../model/login_model.dart';
 
-const BASE_URL = "http://ec2-100-25-198-132.compute-1.amazonaws.com:8956/v1";
+const BASE_URL = "http://ec2-3-239-214-58.compute-1.amazonaws.com:8956/v1";
 
 abstract class RemoteDataSource {
   Future<List<ZoneModel>> getZones({required String path});
   Future<LoginModel> login(String username, String password);
   Future<List<StudentModel>> getStudents(
+      {required StudentRequest studentRequest});
+  Future<StudentModel> getStudentsById(
       {required StudentRequest studentRequest});
   Future<UploadIdModel> uploadStudentId(
       {required StudentRequest studentRequest});
@@ -23,6 +25,7 @@ abstract class RemoteDataSource {
       {required StudentRequest studentRequest});
   Future<UploadIdModel> updateStudentImage(
       {required StudentRequest studentRequest});
+  Future<UploadIdModel> uploadVisitor({required StudentRequest studentRequest});
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -245,6 +248,97 @@ class RemoteDataSourceImpl implements RemoteDataSource {
             'file', file.readAsBytes().asStream(), file.lengthSync(),
             filename: file.path.split('/').last));
       }
+      http.StreamedResponse response = await request.send();
+      final results = await response.stream.bytesToString();
+      switch (response.statusCode) {
+        case 200:
+          //(json.decode(await response.stream.bytesToString()));
+          final uploadModel = UploadIdModel(
+              message: results); //UploadIdModel.fromJson(results);
+          return uploadModel;
+        case 400:
+          throw ServerException(message: results);
+        case 401:
+          throw const ServerException(message: 'Unauthorized');
+        case 500:
+          throw const ServerException(message: 'Internal Server Error');
+        default:
+          throw const ServerException(message: 'Unknown Error');
+      }
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw e.toString();
+    }
+  }
+
+  @override
+  Future<StudentModel> getStudentsById(
+      {required StudentRequest studentRequest}) async {
+    try {
+      // final results =
+      //     (json.decode(studentResponse)); //(json.decode(response.body));
+      // final studentModel =
+      //     (results as List).map((e) => StudentModel.fromJson(e)).toList();
+      // return studentModel;
+      final response = await http.get(
+          Uri.parse(
+              '$BASE_URL/student-info/single/${studentRequest.instituteId}/${studentRequest.classId}/${studentRequest.admissionNumber}'),
+          headers: {
+            HttpHeaders.contentTypeHeader:
+                'application/json; charset=utf-8; application/x-www-form-urlencoded',
+            HttpHeaders.authorizationHeader:
+                'Bearer ${studentRequest.accessToken}',
+          });
+      switch (response.statusCode) {
+        case 200:
+          final results = (json.decode(response.body));
+          final studentModel = StudentModel.fromJson(results);
+          return studentModel;
+        case 400:
+          throw ServerException(message: response.body);
+        case 401:
+          throw const ServerException(message: 'Unauthorized');
+        case 500:
+          throw const ServerException(message: 'Internal Server Error');
+        default:
+          throw const ServerException(message: 'Unknown Error');
+      }
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw e.toString();
+    }
+  }
+
+  @override
+  Future<UploadIdModel> uploadVisitor(
+      {required StudentRequest studentRequest}) async {
+    try {
+      // final results =
+      //     (json.decode(uploadIdResponse)); //(json.decode(response.body));
+      // final uploadModel = UploadIdModel.fromJson(results);
+      // return uploadModel;
+      http.MultipartRequest request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              '$BASE_URL/student-info/${studentRequest.admissionNumber}/add-visitor'));
+      // request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
+      if (GetPlatform.isMobile && studentRequest.idPath.isNotEmpty) {
+        File file = File(studentRequest.idPath);
+        request.files.add(http.MultipartFile(
+            'file', file.readAsBytes().asStream(), file.lengthSync(),
+            filename: file.path.split('/').last));
+      }
+      Map<String, String> fields = {};
+      fields.addAll(<String, String>{
+        'studentName': studentRequest.studentName,
+        'sectionName': studentRequest.sectionName,
+        'schoolId': studentRequest.instituteId,
+        'className': studentRequest.classId,
+        'name': studentRequest.visitorName,
+        'relationship': studentRequest.relationship.toUpperCase(),
+        'contactNumber': studentRequest.contactNumber,
+      });
+      request.fields.addAll(fields);
       http.StreamedResponse response = await request.send();
       final results = await response.stream.bytesToString();
       switch (response.statusCode) {

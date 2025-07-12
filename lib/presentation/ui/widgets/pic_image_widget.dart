@@ -52,6 +52,9 @@ class PicImagePopup extends StatelessWidget {
             _onImageButtonPressed(ImageSource.gallery, context: context);
           },
         ),
+        const SizedBox(
+          height: 30,
+        )
       ],
     );
   }

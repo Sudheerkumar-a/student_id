@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -47,4 +49,13 @@ app.*.map.json
 android/app/huawei/release/output-metadata.json
 android/app/production/release/output-metadata.json
 /windows/flutter
+/ios/build
+/android/app/huawei/release
+/android/app/.cxx
+/android/build
 /android/.gradle
+/macos/Flutter
+/windows/flutter
+macos
+linux
+windows/

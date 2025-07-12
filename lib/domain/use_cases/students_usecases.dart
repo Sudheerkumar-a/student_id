@@ -16,6 +16,11 @@ class StudentsUsecase {
     return repository.getStudents(studentRequest);
   }
 
+  Future<Either<Failure, StudentEntity>> getStudentsById(
+      {required StudentRequest studentRequest}) async {
+    return repository.getStudentsById(studentRequest);
+  }
+
   Future<Either<Failure, UploadIdEntitiy>> uploadStudentId(
       {required StudentRequest studentRequest}) async {
     return repository.uploadStudentId(studentRequest);
@@ -24,6 +29,11 @@ class StudentsUsecase {
   Future<Either<Failure, UploadIdEntitiy>> updateStudentId(
       {required StudentRequest studentRequest}) async {
     return repository.updateStudentId(studentRequest);
+  }
+
+  Future<Either<Failure, UploadIdEntitiy>> uploadVisitor(
+      {required StudentRequest studentRequest}) async {
+    return repository.uploadVisitor(studentRequest);
   }
 
   Future<Either<Failure, UploadIdEntitiy>> updateStudentImage(

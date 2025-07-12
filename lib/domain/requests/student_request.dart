@@ -11,6 +11,9 @@ class StudentRequest {
   final bool isAccepted;
   final String accessToken;
   final String transport;
+  final String visitorName;
+  final String contactNumber;
+  final String relationship;
   StudentRequest(
       {this.id = '',
       this.loginId = '',
@@ -23,5 +26,8 @@ class StudentRequest {
       this.idPath = '',
       this.isAccepted = false,
       this.accessToken = '',
+      this.visitorName = '',
+      this.contactNumber = '',
+      this.relationship = '',
       this.transport = ''});
 }

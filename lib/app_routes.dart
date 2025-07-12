@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:student_id/presentation/ui/screens/list_students_screen.dart';
 import 'package:student_id/presentation/ui/screens/student_id_preview_screen.dart';
+import 'package:student_id/presentation/ui/screens/visitors_details_screen.dart';
 import 'package:student_id/presentation/ui/widgets/camera_widget.dart';
 import 'package:student_id/presentation/ui/screens/student_teacher_screen.dart';
 import 'package:student_id/presentation/ui/screens/list_screen.dart';
@@ -21,6 +22,7 @@ class AppRoutes {
   static String takePictureScreen = '/camera_widget';
   static String studentIdPrewviewScreen = '/student_id_preview_screen';
   static String teacherReviewScreen = '/teacher_review_screen';
+  static String visitorsDetails = '/visitors_details';
 
   /// The map used to define our routes, needs to be supplied to [MaterialApp]
   static Map<String, WidgetBuilder> getRoutes() {
@@ -31,6 +33,7 @@ class AppRoutes {
       AppRoutes.loginScreen: (context) => const LoginScreen(),
       AppRoutes.listScreen: (context) => ListWidget(),
       AppRoutes.studentDetails: (context) => StudentDetails(),
+      AppRoutes.visitorsDetails: (context) => VisitorsDetails(),
       AppRoutes.listStudentsScreen: (context) => ListStudents(),
       AppRoutes.takePictureScreen: (context) => const TakePictureScreen(),
       AppRoutes.studentIdPrewviewScreen: (context) => StudentIdPreviewScreen(),

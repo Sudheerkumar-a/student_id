@@ -16,31 +16,25 @@ class SplashScreen extends StatefulWidget {
 class _SplashState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    Timer.periodic(
-        const Duration(seconds: 3),
-        (Timer t) async => {
-              t.cancel(),
-              if ((PrefUtils().getStringValue("user_name") ?? '').isEmpty ==
-                  true)
-                {
-                  Navigator.of(context).popAndPushNamed(
-                    AppRoutes.schoolsColleges,
-                  )
-                }
-              else
-                {
-                  Navigator.of(context).popAndPushNamed(
-                    AppRoutes.listScreen,
-                    arguments: ListWidgetArguments(
-                        InstituteType.schools, ListType.classes),
-                  )
-                }
-            });
-    return Scaffold(
+    Timer.periodic(const Duration(seconds: 3), (Timer t) async {
+      t.cancel();
+      if ((PrefUtils().getStringValue("user_name") ?? '').isEmpty == true) {
+        Navigator.of(context).popAndPushNamed(
+          AppRoutes.schoolsColleges,
+        );
+      } else {
+        Navigator.of(context).popAndPushNamed(
+          AppRoutes.listScreen,
+          arguments:
+              ListWidgetArguments(InstituteType.schools, ListType.classes),
+        );
+      }
+    });
+    return const Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
+          children: <Widget>[
             Image(
               width: 200,
               height: 200,

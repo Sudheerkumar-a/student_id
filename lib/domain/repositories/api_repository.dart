@@ -19,7 +19,11 @@ abstract class ApisRepository {
   Future<Either<Failure, LoginEntity>> login(String username, String password);
   Future<Either<Failure, List<StudentEntity>>> getStudents(
       StudentRequest studentRequest);
+  Future<Either<Failure, StudentEntity>> getStudentsById(
+      StudentRequest studentRequest);
   Future<Either<Failure, UploadIdEntitiy>> uploadStudentId(
+      StudentRequest studentRequest);
+  Future<Either<Failure, UploadIdEntitiy>> uploadVisitor(
       StudentRequest studentRequest);
   Future<Either<Failure, UploadIdEntitiy>> updateStudentId(
       StudentRequest studentRequest);

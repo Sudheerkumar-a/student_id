@@ -21,6 +21,15 @@ class StudentsBloc extends Cubit<StudentsState> {
         (r) => StudentsWithSuccess(studentEntity: r)));
   }
 
+  Future<StudentEntity> getStudentByID(
+      {required StudentRequest studentRequest}) async {
+    //emit(StudentsLoading());
+
+    final result =
+        await studentsUsecase.getStudentsById(studentRequest: studentRequest);
+    return (result.fold((l) => const StudentEntity(), (r) => r));
+  }
+
   Future<void> uploadStudentId({required StudentRequest studentRequest}) async {
     emit(StudentsLoading());
 
@@ -47,6 +56,16 @@ class StudentsBloc extends Cubit<StudentsState> {
         studentRequest: studentRequest);
     emit(result.fold((l) => StudentsWithError(message: _getErrorMessage(l)),
         (r) => UploadIdWithSuccess(uploadIdEntitiy: r)));
+  }
+
+  Future<String?> uploadVisitor(
+      {required StudentRequest studentRequest}) async {
+    emit(StudentsLoading());
+
+    final result =
+        await studentsUsecase.uploadVisitor(studentRequest: studentRequest);
+    return result.fold((l) => null,
+        (r) => UploadIdWithSuccess(uploadIdEntitiy: r).uploadIdEntitiy.message);
   }
 
   String _getErrorMessage(Failure failure) {

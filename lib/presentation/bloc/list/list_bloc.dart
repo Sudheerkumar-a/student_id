@@ -20,6 +20,15 @@ class ListBloc extends Cubit<ListState> {
         (r) => ListLoadedWithSuccess(zones: r)));
   }
 
+  Future<List<Zones>> getDataList(ListType listType,
+      {String lookupId = ''}) async {
+    emit(ListLoading());
+
+    final result = await getZonesUsecase.execute(listType, lookupId: lookupId);
+    return result.fold((l) => List<Zones>.empty(),
+        (r) => ListLoadedWithSuccess(zones: r).zones);
+  }
+
   String _getErrorMessage(Failure failure) {
     switch (failure.runtimeType) {
       case ServerFailure:

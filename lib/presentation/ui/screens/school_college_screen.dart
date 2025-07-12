@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:student_id/app_routes.dart';
 import 'package:student_id/core/utils/pref_utils.dart';
-
-import '../../../core/constants/assets.dart';
-import 'list_screen.dart';
 
 class SchoolCollegeScreen extends StatelessWidget {
   const SchoolCollegeScreen({super.key});

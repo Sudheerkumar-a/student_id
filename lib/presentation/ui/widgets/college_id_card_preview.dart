@@ -65,7 +65,7 @@ class CollegeIdCardPreview extends StatelessWidget {
               ),
               Center(
                 child: Text(
-                  studentEntity.name ?? '',
+                  'XXXXXX',
                   style: GoogleFonts.roboto(
                       textStyle: TextStyle(
                     color: Colors.red.shade500,
@@ -85,7 +85,7 @@ class CollegeIdCardPreview extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                'Section: ${studentEntity.sectionName}',
+                'Section: XXXXXX',
                 style: GoogleFonts.roboto(
                     textStyle: const TextStyle(
                   color: Colors.black,
@@ -103,7 +103,7 @@ class CollegeIdCardPreview extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                'Academic Year: 2023 - 2024',
+                'Academic Year: 2025 - 2026',
                 style: GoogleFonts.roboto(
                     textStyle: const TextStyle(
                   color: Colors.black,
@@ -112,7 +112,7 @@ class CollegeIdCardPreview extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                'Transport: ${studentEntity.transport}',
+                'Transport: XXXXXX',
                 style: GoogleFonts.roboto(
                     textStyle: const TextStyle(
                   color: Colors.black,
