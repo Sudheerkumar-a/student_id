@@ -45,43 +45,6 @@ class ErrorPopupBuilder<BLOC extends BlocBase<STATE>, STATE extends BaseState>
 
   Future<Object?> handle(BuildContext context, ErrorPopup error) {
     switch (error.errorCode) {
-      case ErrorHandlerEnum.error_400:
-        return AnimatedSnackBar(
-          builder: ((context) {
-            // return SnackBarWidget(
-            //   title: error.title,
-            //   description: error.description,
-            // );
-            return Container(
-              padding: const EdgeInsets.all(16),
-              width: size.width,
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(DIMENSION_10),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    error.title,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  Text(
-                    error.description,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
-                ],
-              ),
-            );
-          }),
-        ).show(context);
       default:
         return handler(context, error);
     }
