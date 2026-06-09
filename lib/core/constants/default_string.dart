@@ -1,5 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
-
 class Constants {
   static const SPECIAL_CHAR = '--';
 
@@ -24,8 +22,6 @@ class Constants {
   static const SSN = 'SSN';
   static const ITIN = 'ITIN';
   static const NOT_APPLICABLE = 'Not applicable';
-
-  var sourceInfo = {ConnectivityResult.none: false};
 
   ///Requests
   static const pending = 'PENDING';

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:get/get_utils/src/platform/platform.dart';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:student_id/data/model/student_model.dart';
 import 'package:student_id/data/model/upload_id_model.dart';
@@ -149,7 +150,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       http.MultipartRequest request = http.MultipartRequest(
           'POST', Uri.parse('$BASE_URL/student-info/save'));
       // request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
-      if (GetPlatform.isMobile && studentRequest.idPath.isNotEmpty) {
+      if (!kIsWeb && studentRequest.idPath.isNotEmpty) {
         File file = File(studentRequest.idPath);
         request.files.add(http.MultipartFile(
             'file', file.readAsBytes().asStream(), file.lengthSync(),
@@ -242,7 +243,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       request.headers.addAll(<String, String>{
         'Authorization': 'Bearer ${studentRequest.accessToken}'
       });
-      if (GetPlatform.isMobile && studentRequest.idPath.isNotEmpty) {
+      if (!kIsWeb && studentRequest.idPath.isNotEmpty) {
         File file = File(studentRequest.idPath);
         request.files.add(http.MultipartFile(
             'file', file.readAsBytes().asStream(), file.lengthSync(),
@@ -322,7 +323,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           Uri.parse(
               '$BASE_URL/student-info/${studentRequest.admissionNumber}/add-visitor'));
       // request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
-      if (GetPlatform.isMobile && studentRequest.idPath.isNotEmpty) {
+      if (!kIsWeb && studentRequest.idPath.isNotEmpty) {
         File file = File(studentRequest.idPath);
         request.files.add(http.MultipartFile(
             'file', file.readAsBytes().asStream(), file.lengthSync(),

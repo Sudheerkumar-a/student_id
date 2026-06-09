@@ -6,14 +6,12 @@ import 'package:student_id/data/repositories/api_repository_impl.dart';
 import 'package:provider/provider.dart';
 
 import 'core/utils/pref_utils.dart';
-import 'injection_container.dart' as di;
 
 Future<void> main() async {
   //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
   //  (value) {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefUtils().init();
-  await di.init();
   runApp(const MyApp());
   // },
   // );
