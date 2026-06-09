@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         darkTheme: ThemeData.dark().copyWith(
           useMaterial3: true,
           colorScheme: kDarkColorScheme,
-          cardTheme: const CardTheme()
+          cardTheme: const CardThemeData()
               .copyWith(color: kDarkColorScheme.secondaryContainer),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
               backgroundColor: kColorScheme.onPrimaryContainer,
               foregroundColor: kColorScheme.primaryContainer,
             ),
-            cardTheme: const CardTheme()
+            cardTheme: const CardThemeData()
                 .copyWith(color: kColorScheme.secondaryContainer),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(

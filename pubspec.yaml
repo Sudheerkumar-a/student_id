@@ -35,12 +35,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  http: ^0.13.5
+  http: ^1.2.0
   camera: ^0.10.4
   image_picker: ^0.8.7+4
-  shared_preferences: ^2.1.0
+  shared_preferences: ^2.5.5
   equatable: ^2.0.5
-  google_fonts: ^4.0.4
+  google_fonts: ^6.2.1
   connectivity_plus: ^4.0.1
   intl: ^0.18.1
   get: ^4.6.5
@@ -68,7 +68,7 @@ flutter_icons:
   image_path_ios: "assets/images/app_icon.png"
   android: true # can specify file name here e.g. "ic_launcher"
   ios: true # can specify file name here e.g. "My-Launcher-Icon"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  min_sdk_android: 24
   remove_alpha_ios: true
   background_color_ios: "#ffffff"
 # The following section is specific to Flutter packages.
