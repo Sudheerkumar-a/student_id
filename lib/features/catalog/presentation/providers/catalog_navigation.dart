@@ -25,6 +25,34 @@ class CatalogNavigation {
     }
   }
 
+  static String subtitleFor(ListScreenArgs args) {
+    switch (args.listType) {
+      case ListType.zones:
+        return 'Select your zone to continue';
+      case ListType.institutes:
+        return 'Select an institute';
+      case ListType.colleges:
+        return 'Select a college year';
+      case ListType.classes:
+      case ListType.classesColleges:
+        return 'Select a class';
+    }
+  }
+
+  static IconData iconFor(ListType listType) {
+    switch (listType) {
+      case ListType.zones:
+        return Icons.map_outlined;
+      case ListType.institutes:
+        return Icons.account_balance_outlined;
+      case ListType.colleges:
+        return Icons.school_outlined;
+      case ListType.classes:
+      case ListType.classesColleges:
+        return Icons.class_outlined;
+    }
+  }
+
   static ListType nextListType(ListScreenArgs args, PrefUtils prefs) {
     if (args.listType == ListType.zones) {
       return ListType.institutes;
