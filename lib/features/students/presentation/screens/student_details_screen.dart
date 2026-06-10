@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:student_id/features/camera/presentation/widgets/pic_image_widget.dart';
 import 'package:student_id/features/students/domain/entities/student_entity.dart';
 import 'package:student_id/features/students/presentation/providers/student_details_helper.dart';
-import 'package:student_id/features/students/presentation/widgets/photo_instructions.dart';
+import 'package:student_id/shared/presentation/widgets/overlays/app_photo_flow.dart';
+import 'package:student_id/shared/presentation/theme/form_tokens.dart';
+import 'package:student_id/shared/presentation/widgets/forms/app_form_scaffold.dart';
+import 'package:student_id/shared/presentation/widgets/forms/app_form_section_card.dart';
+import 'package:student_id/shared/presentation/widgets/forms/app_radio_option_group.dart';
+import 'package:student_id/shared/presentation/widgets/forms/app_text_field.dart';
 
 class StudentDetailsScreen extends StatefulWidget {
   const StudentDetailsScreen({super.key});
@@ -15,31 +18,32 @@ class StudentDetailsScreen extends StatefulWidget {
 }
 
 class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _nameTextController = TextEditingController();
   final _anTextController = TextEditingController();
   final _sectionTextController = TextEditingController();
 
-  bool _isNameValid = true;
-  bool _isANValid = true;
   String? _transportType = 'own';
   late StudentEntity args;
 
   bool get _isCollege => StudentDetailsHelper.isCollegeStudent(args);
   bool get _isStaff => StudentDetailsHelper.isStaff(args);
 
-  void _openImagePicker() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => PicImagePopup(_onImageSelected),
-    );
+  bool get _canContinue => _anTextController.text.trim().isNotEmpty &&
+      (_isCollege && !_isStaff || _nameTextController.text.trim().isNotEmpty);
+
+  @override
+  void dispose() {
+    _nameTextController.dispose();
+    _anTextController.dispose();
+    _sectionTextController.dispose();
+    super.dispose();
   }
 
-  Future<void> _showDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) => const PhotoInstructions(),
-    );
-    _openImagePicker();
+  Future<void> _continueToPhoto() async {
+    if (_formKey.currentState?.validate() != true) return;
+
+    await AppPhotoFlow.pickPhoto(context, _onImageSelected);
   }
 
   void _onImageSelected(String filePath) {
@@ -62,138 +66,101 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   Widget build(BuildContext context) {
     args = GoRouterState.of(context).extra! as StudentEntity;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Student Details')),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(20),
-          padding: const EdgeInsets.only(top: 40),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              if (!_isCollege || _isStaff) ...{
-                TextFormField(
-                  controller: _nameTextController,
-                  keyboardType: TextInputType.name,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp('[a-zA-Z. ]')),
-                  ],
-                  decoration: InputDecoration(
-                    label: Text(
-                      _isStaff ? 'Teacher Name' : 'Student Name',
-                    ),
-                    errorText: _isNameValid ? null : 'Please enter Name',
+    return AppFormScaffold(
+      title: 'Student Details',
+      subtitle: args.schoolName?.isNotEmpty == true ? args.schoolName : null,
+      bottomLabel: 'Continue to Photo',
+      bottomEnabled: _canContinue,
+      onBottomPressed: _continueToPhoto,
+      body: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+          children: [
+            AppFormSectionCard(
+              title: 'Personal Information',
+              subtitle: 'Enter student identification details',
+              icon: Icons.person_outline,
+              children: [
+                if (!_isCollege || _isStaff) ...[
+                  AppTextField(
+                    controller: _nameTextController,
+                    label: _isStaff ? 'Teacher Name' : 'Student Name',
+                    icon: Icons.badge_outlined,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]')),
+                    ],
+                    validator: (v) =>
+                        v?.trim().isEmpty == true ? 'Please enter name' : null,
+                    onChanged: (_) => setState(() {}),
                   ),
-                  style: const TextStyle(color: Colors.black, fontSize: 14),
-                ),
-                const SizedBox(height: 5),
-                Container(
-                  color: const Color.fromARGB(255, 245, 245, 245),
-                  padding: const EdgeInsets.all(5),
-                  child: Text(
-                    'Ex : Chinta vera venkata naga kishore kumar\nChinta V.V.N.Kishore Kumar',
-                    style: GoogleFonts.roboto(),
+                  const AppFieldGap(size: FormTokens.spacingSm),
+                  const AppHelperBanner(
+                    text:
+                        'Example: Chinta Vera Venkata Naga Kishore Kumar\nShort form: Chinta V.V.N. Kishore Kumar',
                   ),
-                ),
-              },
-              TextFormField(
-                controller: _anTextController,
-                keyboardType: TextInputType.name,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp('[0-9a-zA-Z]')),
+                  const AppFieldGap(),
                 ],
-                textCapitalization: TextCapitalization.characters,
-                decoration: InputDecoration(
-                  label: const Text('Admission Id'),
-                  errorText: _isANValid ? null : 'Please enter Admission Id',
-                ),
-                style: const TextStyle(color: Colors.black, fontSize: 14),
-              ),
-              if (_isCollege && _isStaff) ...{
-                TextFormField(
-                  controller: _sectionTextController,
-                  keyboardType: TextInputType.name,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp('[0-9a-zA-Z]')),
-                  ],
+                AppTextField(
+                  controller: _anTextController,
+                  label: 'Admission ID',
+                  hint: 'Enter admission number',
+                  icon: Icons.numbers_rounded,
                   textCapitalization: TextCapitalization.characters,
-                  decoration: InputDecoration(
-                    label: const Text('Section'),
-                    errorText: _isANValid ? null : 'Please enter Section',
-                  ),
-                  style: const TextStyle(color: Colors.black, fontSize: 14),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9a-zA-Z]')),
+                  ],
+                  validator: (v) => v?.trim().isEmpty == true
+                      ? 'Please enter admission ID'
+                      : null,
+                  onChanged: (_) => setState(() {}),
                 ),
-                const SizedBox(height: 20),
-              },
-              if (!_isCollege || _isStaff) ...{
-                Text(
-                  'Transport Type',
-                  style: GoogleFonts.roboto(
-                    textStyle: TextStyle(
-                      color: Colors.grey.shade800,
-                      fontSize: 14,
-                    ),
+                if (_isCollege && _isStaff) ...[
+                  const AppFieldGap(),
+                  AppTextField(
+                    controller: _sectionTextController,
+                    label: 'Section',
+                    icon: Icons.grid_view_rounded,
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9a-zA-Z]')),
+                    ],
+                    validator: (v) =>
+                        v?.trim().isEmpty == true ? 'Please enter section' : null,
+                    onChanged: (_) => setState(() {}),
                   ),
-                ),
-                ListTile(
-                  title: const Text('Own'),
-                  leading: Radio<String>(
-                    value: 'own',
+                ],
+              ],
+            ),
+            if (!_isCollege || _isStaff) ...[
+              const AppFieldGap(size: FormTokens.spacingLg),
+              AppFormSectionCard(
+                title: 'Transport',
+                subtitle: 'How does the student commute?',
+                icon: Icons.directions_bus_outlined,
+                children: [
+                  AppRadioOptionGroup<String>(
+                    title: 'Transport Type',
                     groupValue: _transportType,
-                    onChanged: (String? value) {
-                      setState(() {
-                        _transportType = value;
-                      });
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text('Institute'),
-                  leading: Radio<String>(
-                    value: 'institute',
-                    groupValue: _transportType,
-                    onChanged: (String? value) {
-                      setState(() {
-                        _transportType = value;
-                      });
-                    },
-                  ),
-                ),
-              },
-              const SizedBox(height: 30),
-              Center(
-                child: SizedBox(
-                  width: 150,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _isANValid = _anTextController.text.isNotEmpty;
-                      });
-                      if (_isANValid) {
-                        _showDialog();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                    onChanged: (v) => setState(() => _transportType = v),
+                    options: const [
+                      AppRadioOption(
+                        value: 'own',
+                        label: 'Own Transport',
+                        icon: Icons.directions_car_outlined,
                       ),
-                    ),
-                    child: Text(
-                      'Submit',
-                      style: GoogleFonts.roboto(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
+                      AppRadioOption(
+                        value: 'institute',
+                        label: 'Institute Transport',
+                        icon: Icons.directions_bus_outlined,
                       ),
-                    ),
+                    ],
                   ),
-                ),
+                ],
               ),
             ],
-          ),
+            const AppFieldGap(size: FormTokens.spacingXl),
+          ],
         ),
       ),
     );

@@ -11,7 +11,7 @@ import 'package:student_id/shared/presentation/widgets/staff_appbar_widget.dart'
 import 'package:student_id/features/students/domain/requests/student_request.dart';
 import 'package:student_id/features/students/presentation/models/teacher_review_args.dart';
 import 'package:student_id/features/students/presentation/providers/students_controller.dart';
-import 'package:student_id/features/camera/presentation/widgets/pic_image_widget.dart';
+import 'package:student_id/shared/presentation/widgets/overlays/app_photo_flow.dart';
 
 class TeacherReviewScreen extends ConsumerStatefulWidget {
   const TeacherReviewScreen({super.key});
@@ -25,10 +25,11 @@ class _TeacherReviewScreenState extends ConsumerState<TeacherReviewScreen> {
   String _imagePath = '';
   late TeacherReviewArgs args;
 
-  void _openImagePicker() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => PicImagePopup(_onImageSelected),
+  Future<void> _openImagePicker() async {
+    await AppPhotoFlow.pickPhoto(
+      context,
+      _onImageSelected,
+      showInstructions: false,
     );
   }
 

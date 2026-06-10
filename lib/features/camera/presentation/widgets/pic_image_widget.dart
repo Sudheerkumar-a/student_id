@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:student_id/shared/presentation/widgets/overlays/app_bottom_sheet.dart';
 
 class PicImagePopup extends StatelessWidget {
   PicImagePopup(this._callBack, {super.key});
 
-  final Function(String) _callBack;
+  final void Function(String) _callBack;
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> _onImageButtonPressed(
-    ImageSource source, {
-    BuildContext? context,
-  }) async {
+  static Future<void> show(
+    BuildContext context,
+    void Function(String path) onSelected,
+  ) {
+    return AppBottomSheet.show(
+      context,
+      title: 'Add Photo',
+      subtitle: 'Choose how you want to upload the image',
+      child: PicImagePopup(onSelected),
+    );
+  }
+
+  Future<void> _onImageButtonPressed(ImageSource source) async {
     try {
-      final XFile? pickedFile = await _picker.pickImage(
+      final pickedFile = await _picker.pickImage(
         source: source,
         maxWidth: 600,
         maxHeight: 800,
       );
-      _callBack(pickedFile!.path);
-    } catch (e) {
+      _callBack(pickedFile?.path ?? '');
+    } catch (_) {
       _callBack('');
     }
   }
@@ -26,38 +36,26 @@ class PicImagePopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        const ListTile(
-          title: Text(
-            'Select Id Image By:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.camera_alt),
-          title: const Text(
-            'Camera',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-          ),
+      children: [
+        AppBottomSheetOption(
+          icon: Icons.camera_alt_outlined,
+          title: 'Take Photo',
+          subtitle: 'Use device camera',
           onTap: () {
             Navigator.pop(context);
-            _onImageButtonPressed(ImageSource.camera, context: context);
+            _onImageButtonPressed(ImageSource.camera);
           },
         ),
-        ListTile(
-          leading: const Icon(Icons.photo_album),
-          title: const Text(
-            'Gallery',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-          ),
+        AppBottomSheetOption(
+          icon: Icons.photo_library_outlined,
+          title: 'Choose from Gallery',
+          subtitle: 'Pick an existing photo',
           onTap: () {
             Navigator.pop(context);
-            _onImageButtonPressed(ImageSource.gallery, context: context);
+            _onImageButtonPressed(ImageSource.gallery);
           },
         ),
-        const SizedBox(height: 30),
       ],
     );
   }

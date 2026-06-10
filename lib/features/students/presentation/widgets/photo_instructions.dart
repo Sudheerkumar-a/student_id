@@ -1,79 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:student_id/shared/presentation/theme/form_tokens.dart';
+import 'package:student_id/shared/presentation/widgets/overlays/app_dialog.dart';
 
 class PhotoInstructions extends StatelessWidget {
   const PhotoInstructions({super.key});
 
+  static const _instructions = [
+    'Photo background should be white or plain.',
+    'Avoid noisy or cluttered backgrounds.',
+    'Face should be clearly visible and pointing at the camera.',
+    'Ensure good lighting with no shadows on the face.',
+  ];
+
+  static Future<void> show(BuildContext context) {
+    return AppDialog.show(
+      context,
+      child: const PhotoInstructions(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const AppDialogHeader(
+          title: 'Photo Guidelines',
+          subtitle: 'Please follow these instructions for a valid ID photo',
+          icon: Icons.face_retouching_natural_outlined,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Please follow below instructions:',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                '\u2022 Photo backgroung should be white or plain.',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Colors.black),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '\u2022 Avoid noisey background.',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Colors.black),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '\u2022 Face should be pointing to camera.',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Colors.black),
-              ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ButtonStyle(
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'UNDERSTAND',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        const SizedBox(height: FormTokens.spacingMd),
+        ..._instructions.map((text) => AppDialogBullet(text: text)),
+        const SizedBox(height: FormTokens.spacingMd),
+        AppDialogActions(
+          primaryLabel: 'Got it',
+          onPrimary: () => Navigator.pop(context),
         ),
-      ),
+      ],
     );
   }
 }

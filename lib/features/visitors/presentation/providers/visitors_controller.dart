@@ -6,7 +6,7 @@ import 'package:student_id/features/students/domain/entities/student_entity.dart
 import 'package:student_id/features/students/domain/requests/student_request.dart';
 import 'package:student_id/features/visitors/domain/requests/visitor_request.dart';
 
-enum VisitorsStatus { initial, loading, success, error }
+enum VisitorsStatus { initial, lookingUp, submitting, success, error }
 
 class VisitorsState {
   final VisitorsStatus status;
@@ -21,7 +21,8 @@ class VisitorsState {
     this.errorMessage,
   });
 
-  bool get isLoading => status == VisitorsStatus.loading;
+  bool get isLookingUp => status == VisitorsStatus.lookingUp;
+  bool get isSubmitting => status == VisitorsStatus.submitting;
 
   VisitorsState copyWith({
     VisitorsStatus? status,
@@ -44,7 +45,7 @@ class VisitorsController extends Notifier<VisitorsState> {
   VisitorsState build() => const VisitorsState();
 
   Future<StudentEntity> lookupStudent(StudentRequest request) async {
-    state = state.copyWith(status: VisitorsStatus.loading, clearError: true);
+    state = state.copyWith(status: VisitorsStatus.lookingUp, clearError: true);
     final result =
         await ref.read(studentsUseCaseProvider).getStudentById(request);
     return result.fold(
@@ -66,7 +67,7 @@ class VisitorsController extends Notifier<VisitorsState> {
   }
 
   Future<String?> uploadVisitor(VisitorRequest request) async {
-    state = state.copyWith(status: VisitorsStatus.loading, clearError: true);
+    state = state.copyWith(status: VisitorsStatus.submitting, clearError: true);
     final result =
         await ref.read(visitorUseCaseProvider).uploadVisitor(request);
     return result.fold(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:student_id/features/camera/domain/entities/camera_capture.dart';
 import 'package:student_id/features/camera/domain/entities/camera_screen_input.dart';
+import 'package:student_id/shared/presentation/theme/form_tokens.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({super.key});
@@ -29,9 +30,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Future<void> _takePicture() async {
     try {
       await _initializeControllerFuture;
-
       final image = await _controller!.takePicture();
-
       if (!mounted || _args == null) return;
 
       await context.push(
@@ -64,45 +63,139 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (_args == null || _controller == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(title: const Text('Take Photo')),
+        body: Center(
+          child: CircularProgressIndicator(color: theme.colorScheme.onPrimary),
+        ),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Take your picture')),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: const Text('Take Photo'),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+      ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Container(
-              color: const Color.fromARGB(255, 0, 0, 0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: CameraPreview(_controller!),
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(FormTokens.spacingMd),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: FormTokens.spacingMd,
+                    vertical: FormTokens.spacingSm,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(FormTokens.radiusMd),
+                    border: Border.all(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.4),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  child: Row(
                     children: [
-                      IconButton(
-                        onPressed: _takePicture,
-                        icon: const Icon(Icons.camera),
-                        color: Colors.white,
+                      Icon(
+                        Icons.info_outline_rounded,
+                        color: theme.colorScheme.primaryContainer,
+                        size: 18,
+                      ),
+                      const SizedBox(width: FormTokens.spacingSm),
+                      Expanded(
+                        child: Text(
+                          'Center your face in the frame with a plain background',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.white70,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                ],
+                ),
               ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: FormTokens.spacingMd,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(FormTokens.radiusLg),
+                    child: CameraPreview(_controller!),
+                  ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(
+                  FormTokens.spacingMd,
+                  FormTokens.spacingMd,
+                  FormTokens.spacingMd,
+                  FormTokens.spacingLg,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.4),
+                      blurRadius: 12,
+                      offset: const Offset(0, -4),
+                    ),
+                  ],
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Tap to capture',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.white70,
+                        ),
+                      ),
+                      const SizedBox(height: FormTokens.spacingMd),
+                      GestureDetector(
+                        onTap: _takePicture,
+                        child: Container(
+                          width: 72,
+                          height: 72,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 4),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: theme.colorScheme.primary,
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt_rounded,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
         },
       ),
     );

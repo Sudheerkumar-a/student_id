@@ -1,135 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:student_id/app/preferences_provider.dart';
-import 'package:student_id/core/constants/assets.dart';
+import 'package:student_id/core/utils/pref_utils.dart';
 import 'package:student_id/features/onboarding/presentation/providers/onboarding_navigation.dart';
+import 'package:student_id/shared/presentation/theme/form_tokens.dart';
+import 'package:student_id/shared/presentation/widgets/forms/app_form_section_card.dart';
+import 'package:student_id/shared/presentation/widgets/forms/app_selection_tile.dart';
 
 class StudentTeacherScreen extends ConsumerWidget {
   const StudentTeacherScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Color.fromARGB(255, 245, 245, 245),
-        statusBarIconBrightness: Brightness.dark));
+    final theme = Theme.of(context);
+    final prefs = ref.read(preferencesProvider);
+    final isSchool =
+        prefs.getBoolValue(SharedPreferencesString.isSchool);
+    final instituteLabel = isSchool ? 'School' : 'College';
+
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: FormTokens.surfaceMuted,
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      elevation: 20, // Elevation
-                      shadowColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(13)) // Shadow Color
-                      ),
-                  onPressed: () {
-                    final prefs = ref.read(preferencesProvider);
+            Text('$instituteLabel Portal'),
+            Text(
+              'What would you like to do?',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onPrimary.withValues(alpha: 0.85),
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: FormTokens.screenPadding.copyWith(
+          bottom: FormTokens.spacingXl,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppHelperBanner(
+              text: isSchool
+                  ? 'Register student IDs, manage records as staff, or check in visitors for your school.'
+                  : 'Register student IDs, manage records as staff, or check in visitors for your college.',
+              icon: Icons.info_outline_rounded,
+            ),
+            const AppFieldGap(size: FormTokens.spacingLg),
+            AppFormSectionCard(
+              title: 'Select an Option',
+              subtitle: 'Tap to continue',
+              icon: Icons.dashboard_outlined,
+              children: [
+                AppSelectionTile(
+                  icon: Icons.person_outline,
+                  title: 'Students',
+                  subtitle: 'Register or update student ID cards',
+                  onTap: () {
                     final target =
                         OnboardingNavigation.catalogEntryForHub(prefs);
                     context.push(target.route, extra: target.extra);
                   },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 30),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          Assets.studentIcon,
-                          width: 48,
-                          height: 48,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'STUDENTS',
-                          style:
-                              GoogleFonts.roboto(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
-                const SizedBox(
-                  width: 20,
+                const AppFieldGap(),
+                AppSelectionTile(
+                  icon: Icons.admin_panel_settings_outlined,
+                  title: 'Teachers',
+                  subtitle: 'Staff login to review and approve IDs',
+                  onTap: () => context.push('/login'),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      elevation: 20, // Elevation
-                      shadowColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(13)) // Shadow Color
-                      ),
-                  onPressed: () => {
-                    context.push('/login'),
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 30),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          Assets.teacherICon,
-                          width: 48,
-                          height: 48,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'TEACHERS',
-                          style:
-                              GoogleFonts.roboto(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
+                const AppFieldGap(),
+                AppSelectionTile(
+                  icon: Icons.groups_outlined,
+                  title: 'Visitors',
+                  subtitle: 'Register parents or guests visiting campus',
+                  onTap: () => context.push('/visitors'),
                 ),
               ],
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  elevation: 20, // Elevation
-                  shadowColor: Colors.white,
-                  backgroundColor: const Color.fromARGB(255, 245, 245, 245),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(13)) // Shadow Color
-                  ),
-              onPressed: () => {
-                context.push('/visitors'),
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      Assets.studentIcon,
-                      width: 48,
-                      height: 48,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      'VISITORS',
-                      style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ],
         ),
