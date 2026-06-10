@@ -12,7 +12,7 @@ class ZoneModel extends Equatable {
     return ZoneModel(
       id: json['id'] ?? '0',
       name: json['name'] ?? 'Unknown',
-      stateName: json['stateName'] ?? 'Andhra Pradesh'.toString(),
+      stateName: json['state'] ?? 'Andhra Pradesh'.toString(),
     );
   }
 

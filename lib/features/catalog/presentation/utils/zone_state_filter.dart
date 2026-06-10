@@ -19,8 +19,7 @@ abstract final class ZoneStateFilter {
     if (normalized.isEmpty) return false;
 
     return switch (tab) {
-      ZoneStateTab.andhraPradesh =>
-        normalized.contains('andhra'),
+      ZoneStateTab.andhraPradesh => normalized.contains('andhra'),
       ZoneStateTab.telangana =>
         normalized.contains('telangana') || normalized.contains('telangna'),
     };

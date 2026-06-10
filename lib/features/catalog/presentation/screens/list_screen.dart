@@ -69,7 +69,9 @@ class _ListScreenContent extends ConsumerWidget {
                   Text(
                     subtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.85),
+                      color: theme.colorScheme.onPrimary.withValues(
+                        alpha: 0.85,
+                      ),
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -164,9 +166,7 @@ class _ZonesTabBody extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      padding: FormTokens.screenPadding.copyWith(
-        bottom: FormTokens.spacingXl,
-      ),
+      padding: FormTokens.screenPadding.copyWith(bottom: FormTokens.spacingXl),
       child: AppFormSectionCard(
         title: stateTab.label,
         subtitle: '${zones.length} zone(s) — tap to select',
@@ -178,11 +178,7 @@ class _ZonesTabBody extends StatelessWidget {
                 subtitle: zone.stateName,
                 icon: Icons.location_on_outlined,
                 onTap: () {
-                  final target = CatalogNavigation.onItemTap(
-                    args,
-                    zone,
-                    prefs,
-                  );
+                  final target = CatalogNavigation.onItemTap(args, zone, prefs);
                   context.push(target.route, extra: target.extra);
                 },
               ),
@@ -217,9 +213,7 @@ class _CatalogListBody extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      padding: FormTokens.screenPadding.copyWith(
-        bottom: FormTokens.spacingXl,
-      ),
+      padding: FormTokens.screenPadding.copyWith(bottom: FormTokens.spacingXl),
       child: AppFormSectionCard(
         title: CatalogNavigation.titleFor(args),
         subtitle: subtitle,
@@ -230,11 +224,7 @@ class _CatalogListBody extends StatelessWidget {
                 title: zone.name ?? 'Unnamed',
                 icon: CatalogNavigation.iconFor(args.listType),
                 onTap: () {
-                  final target = CatalogNavigation.onItemTap(
-                    args,
-                    zone,
-                    prefs,
-                  );
+                  final target = CatalogNavigation.onItemTap(args, zone, prefs);
                   context.push(target.route, extra: target.extra);
                 },
               ),

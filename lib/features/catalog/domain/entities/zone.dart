@@ -5,11 +5,7 @@ class Zones extends Equatable {
   final String? name;
   final String? stateName;
 
-  const Zones({
-    required this.id,
-    required this.name,
-    this.stateName,
-  });
+  const Zones({required this.id, required this.name, this.stateName});
 
   @override
   List<Object?> get props => [id, name, stateName];
