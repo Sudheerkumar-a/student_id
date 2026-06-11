@@ -87,6 +87,16 @@ class StudentIdPreviewScreen extends ConsumerWidget {
                     fontSize: 16,
                   ),
                 ),
+                if (args.parentName?.isNotEmpty == true) ...[
+                  const SizedBox(height: 10),
+                  Text(
+                    'Parent Name: ${args.parentName}',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ],
             ),
             const SizedBox(height: 20),
@@ -109,6 +119,7 @@ class StudentIdPreviewScreen extends ConsumerWidget {
                           admissionNumber: args.admissionNumber ?? '',
                           idPath: args.profileUrl ?? '',
                           transport: args.transport ?? '',
+                          parentName: args.parentName ?? '',
                         ),
                       );
                 },

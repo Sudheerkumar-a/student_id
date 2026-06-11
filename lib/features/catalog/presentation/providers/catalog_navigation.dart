@@ -35,15 +35,36 @@ class CatalogNavigation {
     return ListType.colleges;
   }
 
+  static String _resolveState({
+    required ListType listType,
+    required String? dataState,
+    required String argsState,
+  }) {
+    final data = (dataState ?? '').trim();
+    final args = argsState.trim();
+
+    if (listType == ListType.zones) {
+      return data.isNotEmpty ? data : args;
+    }
+    return args.isNotEmpty ? args : data;
+  }
+
   static ListScreenArgs nextArgs(
     ListScreenArgs args,
     Zones data,
     PrefUtils prefs,
   ) {
+    final state = _resolveState(
+      listType: args.listType,
+      dataState: data.state,
+      argsState: args.state,
+    );
+
     var arguments = ListScreenArgs(
       args.instituteType,
       nextListType(args, prefs),
       zoneId: '${data.id}',
+      state: state,
     );
     if (args.listType == ListType.institutes) {
       arguments = ListScreenArgs(
@@ -52,6 +73,7 @@ class CatalogNavigation {
         zoneId: args.zoneId,
         instituteId: '${data.id}',
         instituteName: '${data.name}',
+        state: state,
       );
     } else if (args.listType == ListType.classes ||
         args.listType == ListType.colleges) {
@@ -67,6 +89,7 @@ class CatalogNavigation {
         instituteId: instituteId,
         instituteName: args.instituteName,
         classId: '${data.id}',
+        state: state,
       );
     }
     return arguments;
@@ -102,6 +125,7 @@ class CatalogNavigation {
             schoolName: args.instituteName,
             classNo: zone.id,
             className: zone.name,
+            state: args.state,
           ),
         );
       }

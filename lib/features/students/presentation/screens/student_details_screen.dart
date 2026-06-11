@@ -18,14 +18,26 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   final _nameTextController = TextEditingController();
   final _anTextController = TextEditingController();
   final _sectionTextController = TextEditingController();
+  final _parentNameTextController = TextEditingController();
 
   bool _isNameValid = true;
   bool _isANValid = true;
+  bool _isParentNameValid = true;
   String? _transportType = 'own';
   late StudentEntity args;
 
   bool get _isCollege => StudentDetailsHelper.isCollegeStudent(args);
   bool get _isStaff => StudentDetailsHelper.isStaff(args);
+  bool get _isTelangana => StudentDetailsHelper.isTelangana(args);
+
+  @override
+  void dispose() {
+    _nameTextController.dispose();
+    _anTextController.dispose();
+    _sectionTextController.dispose();
+    _parentNameTextController.dispose();
+    super.dispose();
+  }
 
   void _openImagePicker() {
     showModalBottomSheet(
@@ -54,8 +66,22 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
         sectionName: _sectionTextController.text,
         transportType: _transportType,
         photoPath: filePath,
+        parentName: _parentNameTextController.text.trim(),
       ),
     );
+  }
+
+  bool _validateForm() {
+    final admissionValid = _anTextController.text.trim().isNotEmpty;
+    final parentValid = !_isTelangana ||
+        _parentNameTextController.text.trim().isNotEmpty;
+
+    setState(() {
+      _isANValid = admissionValid;
+      _isParentNameValid = parentValid;
+    });
+
+    return admissionValid && parentValid;
   }
 
   @override
@@ -110,6 +136,24 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                 ),
                 style: const TextStyle(color: Colors.black, fontSize: 14),
               ),
+              if (_isTelangana) ...{
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _parentNameTextController,
+                  keyboardType: TextInputType.name,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp('[a-zA-Z. ]')),
+                  ],
+                  textCapitalization: TextCapitalization.words,
+                  decoration: InputDecoration(
+                    label: const Text('Parent Name'),
+                    errorText: _isParentNameValid
+                        ? null
+                        : 'Please enter Parent Name',
+                  ),
+                  style: const TextStyle(color: Colors.black, fontSize: 14),
+                ),
+              },
               if (_isCollege && _isStaff) ...{
                 TextFormField(
                   controller: _sectionTextController,
@@ -167,10 +211,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                   width: 150,
                   child: ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _isANValid = _anTextController.text.isNotEmpty;
-                      });
-                      if (_isANValid) {
+                      if (_validateForm()) {
                         _showDialog();
                       }
                     },

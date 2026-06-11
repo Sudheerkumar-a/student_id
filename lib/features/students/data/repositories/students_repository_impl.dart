@@ -76,6 +76,7 @@ class StudentsRepositoryImpl implements StudentsRepository {
           'sectionName': request.sectionName,
           'idNumber': request.admissionNumber,
           'transport': request.transport,
+          'parentName': request.parentName,
         },
         parser: _parseUploadMessage,
       );

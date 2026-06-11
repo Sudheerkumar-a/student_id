@@ -11,6 +11,7 @@ class StudentRequest {
   final bool isAccepted;
   final String accessToken;
   final String transport;
+  final String parentName;
 
   const StudentRequest({
     this.id = '',
@@ -25,5 +26,6 @@ class StudentRequest {
     this.isAccepted = false,
     this.accessToken = '',
     this.transport = '',
+    this.parentName = '',
   });
 }
