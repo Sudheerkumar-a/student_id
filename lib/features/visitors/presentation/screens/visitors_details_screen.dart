@@ -86,7 +86,8 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final instituteType = PrefUtils().getBoolValue(SharedPreferencesString.isSchool)
+    final instituteType =
+        PrefUtils().getBoolValue(SharedPreferencesString.isSchool)
         ? InstituteType.schools
         : InstituteType.colleges;
 
@@ -120,441 +121,455 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Visitor Details')),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.all(20),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: zonesAsync.when(
-                              data: (items) => DropdownButtonFormField<Zones>(
-                                items: items
-                                    .map<DropdownMenuItem<Zones>>((Zones value) {
-                                  return DropdownMenuItem<Zones>(
-                                    value: value,
-                                    child: Text(
-                                      overflow: TextOverflow.clip,
-                                      value.toString(),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Visitor Details')),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: zonesAsync.when(
+                                data: (items) => DropdownButtonFormField<Zones>(
+                                  items: items.map<DropdownMenuItem<Zones>>((
+                                    Zones value,
+                                  ) {
+                                    return DropdownMenuItem<Zones>(
+                                      value: value,
+                                      child: Text(
+                                        overflow: TextOverflow.clip,
+                                        value.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedInstitute = null;
+                                      _selectedZone = value;
+                                    });
+                                  },
+                                  hint: const Text('Select Zone'),
+                                ),
+                                loading: () => DropdownButtonFormField<Zones>(
+                                  items: const [],
+                                  hint: const Text('Select Zone'),
+                                  onChanged: null,
+                                ),
+                                error: (error, _) =>
+                                    DropdownButtonFormField<Zones>(
+                                      items: const [],
+                                      hint: Text('Error: $error'),
+                                      onChanged: null,
                                     ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedInstitute = null;
-                                    _selectedZone = value;
-                                  });
-                                },
-                                hint: const Text('Select Zone'),
-                              ),
-                              loading: () => DropdownButtonFormField<Zones>(
-                                items: const [],
-                                hint: const Text('Select Zone'),
-                                onChanged: null,
-                              ),
-                              error: (error, _) => DropdownButtonFormField<Zones>(
-                                items: const [],
-                                hint: Text('Error: $error'),
-                                onChanged: null,
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            flex: 1,
-                            child: institutesAsync.when(
-                              data: (items) => DropdownButtonFormField<Zones>(
-                                key: UniqueKey(),
-                                items: items
-                                    .map<DropdownMenuItem<Zones>>((Zones value) {
-                                  return DropdownMenuItem<Zones>(
-                                    value: value,
-                                    child: Text(
-                                      overflow: TextOverflow.clip,
-                                      value.toString(),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              flex: 1,
+                              child: institutesAsync.when(
+                                data: (items) => DropdownButtonFormField<Zones>(
+                                  key: UniqueKey(),
+                                  items: items.map<DropdownMenuItem<Zones>>((
+                                    Zones value,
+                                  ) {
+                                    return DropdownMenuItem<Zones>(
+                                      value: value,
+                                      child: Text(
+                                        overflow: TextOverflow.clip,
+                                        value.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  value: _selectedInstitute,
+                                  isDense: true,
+                                  isExpanded: true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedInstitute = value;
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Please Select ${instituteType == InstituteType.schools ? 'School' : 'Colleges'}';
+                                    }
+                                    return null;
+                                  },
+                                  hint: Text(
+                                    'Select ${instituteType == InstituteType.schools ? 'School' : 'Colleges'}',
+                                  ),
+                                ),
+                                loading: () => DropdownButtonFormField<Zones>(
+                                  items: const [],
+                                  hint: Text(
+                                    'Select ${instituteType == InstituteType.schools ? 'School' : 'Colleges'}',
+                                  ),
+                                  onChanged: null,
+                                ),
+                                error: (error, _) =>
+                                    DropdownButtonFormField<Zones>(
+                                      items: const [],
+                                      hint: Text('Error: $error'),
+                                      onChanged: null,
                                     ),
-                                  );
-                                }).toList(),
-                                value: _selectedInstitute,
-                                isDense: true,
-                                isExpanded: true,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedInstitute = value;
-                                  });
-                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        classesAsync.when(
+                          data: (items) => DropdownButtonFormField<Zones>(
+                            items: items.map<DropdownMenuItem<Zones>>((
+                              Zones value,
+                            ) {
+                              return DropdownMenuItem<Zones>(
+                                value: value,
+                                child: Text(
+                                  overflow: TextOverflow.clip,
+                                  value.toString(),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedClass = value;
+                              });
+                            },
+                            value: _selectedClass,
+                            isDense: true,
+                            isExpanded: true,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please Select ${instituteType == InstituteType.schools ? 'Class' : 'Year'}';
+                              }
+                              return null;
+                            },
+                            hint: Text(
+                              'Select ${instituteType == InstituteType.schools ? 'Class' : 'Year'}',
+                            ),
+                          ),
+                          loading: () => DropdownButtonFormField<Zones>(
+                            items: const [],
+                            hint: Text(
+                              'Select ${instituteType == InstituteType.schools ? 'Class' : 'Year'}',
+                            ),
+                            onChanged: null,
+                          ),
+                          error: (error, _) => DropdownButtonFormField<Zones>(
+                            items: const [],
+                            hint: Text('Error: $error'),
+                            onChanged: null,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: TextFormField(
+                                controller: _anTextController,
+                                keyboardType: TextInputType.name,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp('[0-9a-zA-Z. ]'),
+                                  ),
+                                ],
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                decoration: InputDecoration(
+                                  label: const Text(
+                                    'Student Addmission Number',
+                                  ),
+                                  errorText: _isNameValid
+                                      ? null
+                                      : 'Please enter Student Admission Id',
+                                ),
                                 validator: (value) {
-                                  if (value == null) {
-                                    return 'Please Select ${instituteType == InstituteType.schools ? 'School' : 'Colleges'}';
+                                  if (value?.isEmpty == true) {
+                                    return 'Please enter Student Admission Id';
                                   }
                                   return null;
                                 },
-                                hint: Text(
-                                  'Select ${instituteType == InstituteType.schools ? 'School' : 'Colleges'}',
-                                ),
-                              ),
-                              loading: () => DropdownButtonFormField<Zones>(
-                                items: const [],
-                                hint: Text(
-                                  'Select ${instituteType == InstituteType.schools ? 'School' : 'Colleges'}',
-                                ),
-                                onChanged: null,
-                              ),
-                              error: (error, _) => DropdownButtonFormField<Zones>(
-                                items: const [],
-                                hint: Text('Error: $error'),
-                                onChanged: null,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      classesAsync.when(
-                        data: (items) => DropdownButtonFormField<Zones>(
-                          items: items
-                              .map<DropdownMenuItem<Zones>>((Zones value) {
-                            return DropdownMenuItem<Zones>(
-                              value: value,
-                              child: Text(
-                                overflow: TextOverflow.clip,
-                                value.toString(),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedClass = value;
-                            });
-                          },
-                          value: _selectedClass,
-                          isDense: true,
-                          isExpanded: true,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please Select ${instituteType == InstituteType.schools ? 'Class' : 'Year'}';
-                            }
-                            return null;
-                          },
-                          hint: Text(
-                            'Select ${instituteType == InstituteType.schools ? 'Class' : 'Year'}',
-                          ),
-                        ),
-                        loading: () => DropdownButtonFormField<Zones>(
-                          items: const [],
-                          hint: Text(
-                            'Select ${instituteType == InstituteType.schools ? 'Class' : 'Year'}',
-                          ),
-                          onChanged: null,
-                        ),
-                        error: (error, _) => DropdownButtonFormField<Zones>(
-                          items: const [],
-                          hint: Text('Error: $error'),
-                          onChanged: null,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: TextFormField(
-                              controller: _anTextController,
-                              keyboardType: TextInputType.name,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.allow(
-                                  RegExp('[0-9a-zA-Z. ]'),
-                                ),
-                              ],
-                              textCapitalization: TextCapitalization.characters,
-                              decoration: InputDecoration(
-                                label: const Text('Student Addmission Number'),
-                                errorText: _isNameValid
-                                    ? null
-                                    : 'Please enter Student Admission Id',
-                              ),
-                              validator: (value) {
-                                if (value?.isEmpty == true) {
-                                  return 'Please enter Student Admission Id';
-                                }
-                                return null;
-                              },
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          ElevatedButton(
-                            onPressed: () async {
-                              final studentRequest = StudentRequest(
-                                instituteId: '${_selectedInstitute?.id}'.trim(),
-                                classId: '${_selectedClass?.id}'.trim(),
-                                admissionNumber: _anTextController.text.trim(),
-                              );
-                              studentEntity = await ref
-                                  .read(visitorsControllerProvider.notifier)
-                                  .lookupStudent(studentRequest);
-
-                              _nameTextController.text =
-                                  studentEntity?.name ?? '';
-                              _sectionTextController.text =
-                                  studentEntity?.sectionName ?? '';
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text(
-                              'GET',
-                              style: GoogleFonts.roboto(
-                                textStyle: const TextStyle(
-                                  color: Colors.white,
+                                style: const TextStyle(
+                                  color: Colors.black,
                                   fontSize: 14,
                                 ),
                               ),
                             ),
+                            const SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: () async {
+                                final studentRequest = StudentRequest(
+                                  instituteId: '${_selectedInstitute?.id}'
+                                      .trim(),
+                                  classId: '${_selectedClass?.id}'.trim(),
+                                  admissionNumber: _anTextController.text
+                                      .trim(),
+                                );
+                                studentEntity = await ref
+                                    .read(visitorsControllerProvider.notifier)
+                                    .lookupStudent(studentRequest);
+
+                                _nameTextController.text =
+                                    studentEntity?.name ?? '';
+                                _sectionTextController.text =
+                                    studentEntity?.sectionName ?? '';
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Text(
+                                'GET',
+                                style: GoogleFonts.roboto(
+                                  textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Container(
+                          color: const Color.fromARGB(255, 245, 245, 245),
+                          padding: const EdgeInsets.all(5),
+                          child: Text(
+                            'Ex : TEST4545',
+                            style: GoogleFonts.roboto(),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Container(
-                        color: const Color.fromARGB(255, 245, 245, 245),
-                        padding: const EdgeInsets.all(5),
-                        child: Text(
-                          'Ex : TEST4545',
-                          style: GoogleFonts.roboto(),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _nameTextController,
-                        keyboardType: TextInputType.name,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                            RegExp('[0-9a-zA-Z]'),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _nameTextController,
+                          keyboardType: TextInputType.name,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                              RegExp('[0-9a-zA-Z]'),
+                            ),
+                          ],
+                          textCapitalization: TextCapitalization.characters,
+                          decoration: InputDecoration(
+                            label: const Text('Student Name'),
+                            errorText: _isANValid
+                                ? null
+                                : 'Please enter Student Name',
                           ),
-                        ],
-                        textCapitalization: TextCapitalization.characters,
-                        decoration: InputDecoration(
-                          label: const Text('Student Name'),
-                          errorText: _isANValid
-                              ? null
-                              : 'Please enter Student Name',
-                        ),
-                        validator: (value) {
-                          if (value?.isEmpty == true) {
-                            return 'Please enter Student Name';
-                          }
-                          return null;
-                        },
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _sectionTextController,
-                        keyboardType: TextInputType.name,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                            RegExp('[0-9a-zA-Z]'),
-                          ),
-                        ],
-                        textCapitalization: TextCapitalization.characters,
-                        decoration: InputDecoration(
-                          label: const Text('Section'),
-                          errorText:
-                              _isANValid ? null : 'Please enter Section',
-                        ),
-                        validator: (value) {
-                          if (value?.isEmpty == true) {
-                            return 'Please enter Section';
-                          }
-                          return null;
-                        },
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Visitor Relation',
-                        style: GoogleFonts.roboto(
-                          textStyle: TextStyle(
-                            color: Colors.grey.shade800,
+                          validator: (value) {
+                            if (value?.isEmpty == true) {
+                              return 'Please enter Student Name';
+                            }
+                            return null;
+                          },
+                          style: const TextStyle(
+                            color: Colors.black,
                             fontSize: 14,
                           ),
                         ),
-                      ),
-                      DropdownButtonFormField<String>(
-                        items: ['Father', 'Mother', 'Visitor']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              overflow: TextOverflow.clip,
-                              value.toString(),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _sectionTextController,
+                          keyboardType: TextInputType.name,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                              RegExp('[0-9a-zA-Z]'),
                             ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            releationShip = value ?? '';
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please Select releationShip';
-                          }
-                          return null;
-                        },
-                        hint: const Text('Select Visitor Relation'),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _visitorNameTextController,
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                            RegExp('[0-9a-zA-Z]'),
+                          ],
+                          textCapitalization: TextCapitalization.characters,
+                          decoration: InputDecoration(
+                            label: const Text('Section'),
+                            errorText: _isANValid
+                                ? null
+                                : 'Please enter Section',
+                          ),
+                          validator: (value) {
+                            if (value?.isEmpty == true) {
+                              return 'Please enter Section';
+                            }
+                            return null;
+                          },
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'Visitor Relation',
+                          style: GoogleFonts.roboto(
+                            textStyle: TextStyle(
+                              color: Colors.grey.shade800,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        DropdownButtonFormField<String>(
+                          items: ['Father', 'Mother', 'Visitor']
+                              .map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    overflow: TextOverflow.clip,
+                                    value.toString(),
+                                  ),
+                                );
+                              })
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              releationShip = value ?? '';
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please Select releationShip';
+                            }
+                            return null;
+                          },
+                          hint: const Text('Select Visitor Relation'),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _visitorNameTextController,
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                              RegExp('[0-9a-zA-Z]'),
+                            ),
+                          ],
+                          textCapitalization: TextCapitalization.characters,
+                          decoration: InputDecoration(
+                            label: const Text('Visitor Name'),
+                            errorText: _isANValid ? null : 'Please enter Name',
+                          ),
+                          validator: (value) {
+                            if (value?.isEmpty == true) {
+                              return 'Please enter visitor name';
+                            }
+                            return null;
+                          },
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _contactNoTextController,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.done,
+                          maxLength: 10,
+                          decoration: const InputDecoration(
+                            label: Text('Contact No.'),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                            visitorPhotoPath.isEmpty
+                                ? 'Add Visitor Photo'
+                                : 'Update Visitor Photo',
+                          ),
+                          onTap: () {
+                            selectedPhotoType = 'visitor';
+                            _showDialog();
+                          },
+                          leading: const Icon(Icons.photo),
+                        ),
+                        if (visitorPhotoPath.isNotEmpty) ...[
+                          const SizedBox(height: 10),
+                          Container(
+                            color: const Color.fromARGB(255, 211, 211, 211),
+                            child: Image.file(File(visitorPhotoPath)),
                           ),
                         ],
-                        textCapitalization: TextCapitalization.characters,
-                        decoration: InputDecoration(
-                          label: const Text('Visitor Name'),
-                          errorText:
-                              _isANValid ? null : 'Please enter Name',
-                        ),
-                        validator: (value) {
-                          if (value?.isEmpty == true) {
-                            return 'Please enter visitor name';
-                          }
-                          return null;
-                        },
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _contactNoTextController,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.done,
-                        maxLength: 10,
-                        decoration: const InputDecoration(
-                          label: Text('Contact No.'),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      ),
-                      ListTile(
-                        title: Text(
-                          visitorPhotoPath.isEmpty
-                              ? 'Add Visitor Photo'
-                              : 'Update Visitor Photo',
-                        ),
-                        onTap: () {
-                          selectedPhotoType = 'visitor';
-                          _showDialog();
-                        },
-                        leading: const Icon(Icons.photo),
-                      ),
-                      if (visitorPhotoPath.isNotEmpty) ...[
-                        const SizedBox(height: 10),
-                        Container(
-                          color: const Color.fromARGB(255, 211, 211, 211),
-                          child: Image.file(File(visitorPhotoPath)),
-                        ),
+                        const SizedBox(height: 30),
                       ],
-                      const SizedBox(height: 30),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState?.validate() == true &&
-                    visitorPhotoPath.isNotEmpty &&
-                    releationShip.isNotEmpty) {
-                  final visitorRequest = VisitorRequest(
-                    admissionNumber: _anTextController.text,
-                    visitorName: _visitorNameTextController.text,
-                    relationship: releationShip,
-                    studentName: _nameTextController.text,
-                    sectionName: _sectionTextController.text,
-                    instituteId: '${_selectedInstitute?.id}',
-                    classId: '${_selectedClass?.id}',
-                    contactNumber: _contactNoTextController.text,
-                    photoPath: visitorPhotoPath,
-                  );
-                  Dialogs.loader(context);
-                  final response = await ref
-                      .read(visitorsControllerProvider.notifier)
-                      .uploadVisitor(visitorRequest);
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                  if (response != null) {
-                    await showDialog(
-                      context: context,
-                      builder: (context) => VisitorIdCardPreview(
-                        StudentEntity(
-                          name: _visitorNameTextController.text,
-                          schoolName: _selectedInstitute?.name ?? '',
-                          admissionNumber: _anTextController.text,
-                          profileUrl: visitorPhotoPath,
-                        ),
-                      ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState?.validate() == true &&
+                      visitorPhotoPath.isNotEmpty &&
+                      releationShip.isNotEmpty) {
+                    final visitorRequest = VisitorRequest(
+                      admissionNumber: _anTextController.text,
+                      visitorName: _visitorNameTextController.text,
+                      relationship: releationShip,
+                      studentName: _nameTextController.text,
+                      sectionName: _sectionTextController.text,
+                      instituteId: '${_selectedInstitute?.id}',
+                      classId: '${_selectedClass?.id}',
+                      contactNumber: _contactNoTextController.text,
+                      photoPath: visitorPhotoPath,
                     );
+                    Dialogs.loader(context);
+                    final response = await ref
+                        .read(visitorsControllerProvider.notifier)
+                        .uploadVisitor(visitorRequest);
                     if (context.mounted) {
-                      context.go('/hub');
+                      Navigator.pop(context);
+                    }
+                    if (response != null) {
+                      await showDialog(
+                        context: context,
+                        builder: (context) => VisitorIdCardPreview(
+                          StudentEntity(
+                            name: _visitorNameTextController.text,
+                            schoolName: _selectedInstitute?.name ?? '',
+                            admissionNumber: _anTextController.text,
+                            profileUrl: visitorPhotoPath,
+                          ),
+                        ),
+                      );
+                      if (context.mounted) {
+                        context.go('/hub');
+                      }
                     }
                   }
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
                 ),
-              ),
-              child: Text(
-                'SUBMIT',
-                style: GoogleFonts.roboto(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
+                child: Text(
+                  'SUBMIT',
+                  style: GoogleFonts.roboto(
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

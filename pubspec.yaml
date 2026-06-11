@@ -2,7 +2,7 @@ name: student_id
 description: Student id capture project.
 publish_to: 'none'
 
-version: 2.0.0+11
+version: 2.0.0+12
 
 environment:
   sdk: '>=3.12.0 <4.0.0'
