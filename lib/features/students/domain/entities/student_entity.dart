@@ -11,6 +11,8 @@ class StudentEntity {
   final String? schoolName;
   final String? className;
   final String? sectionName;
+  final String? parentName;
+  final String? state;
 
   const StudentEntity({
     this.id,
@@ -25,5 +27,7 @@ class StudentEntity {
     this.schoolName = '',
     this.className = '',
     this.sectionName = '',
+    this.parentName = '',
+    this.state = '',
   });
 }

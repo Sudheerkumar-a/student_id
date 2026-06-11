@@ -7,6 +7,7 @@ import 'package:student_id/core/constants/enums.dart';
 import 'package:student_id/core/errors/error_pop.dart';
 import 'package:student_id/core/utils/dialogs.dart';
 import 'package:student_id/core/utils/pref_utils.dart';
+import 'package:student_id/features/catalog/presentation/utils/zone_state_filter.dart';
 import 'package:student_id/features/students/domain/entities/student_entity.dart';
 import 'package:student_id/features/students/domain/requests/student_request.dart';
 import 'package:student_id/features/students/presentation/providers/students_controller.dart';
@@ -79,6 +80,7 @@ class StudentIdPreviewScreen extends ConsumerWidget {
                 admissionNumber: args.admissionNumber ?? '',
                 idPath: args.profileUrl ?? '',
                 transport: args.transport ?? '',
+                parentName: args.parentName ?? '',
               ),
             );
       },
@@ -116,6 +118,12 @@ class StudentIdPreviewScreen extends ConsumerWidget {
                 label: 'Admission Number',
                 value: args.admissionNumber ?? '',
               ),
+              if (ZoneStateFilter.isTelangana(args.state))
+                _SummaryRow(
+                  icon: Icons.family_restroom_outlined,
+                  label: 'Parent Name',
+                  value: args.parentName ?? '',
+                ),
               if (args.schoolName?.isNotEmpty == true)
                 _SummaryRow(
                   icon: Icons.school_outlined,

@@ -7,6 +7,7 @@ class ListScreenArgs {
   final String instituteId;
   final String instituteName;
   final String classId;
+  final String state;
 
   const ListScreenArgs(
     this.instituteType,
@@ -15,5 +16,6 @@ class ListScreenArgs {
     this.instituteId = '',
     this.classId = '',
     this.instituteName = '',
+    this.state = '',
   });
 }

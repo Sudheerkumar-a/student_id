@@ -22,21 +22,30 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   final _nameTextController = TextEditingController();
   final _anTextController = TextEditingController();
   final _sectionTextController = TextEditingController();
+  final _parentNameTextController = TextEditingController();
 
   String? _transportType = 'own';
   late StudentEntity args;
 
   bool get _isCollege => StudentDetailsHelper.isCollegeStudent(args);
   bool get _isStaff => StudentDetailsHelper.isStaff(args);
+  bool get _isTelangana => StudentDetailsHelper.isTelangana(args);
 
-  bool get _canContinue => _anTextController.text.trim().isNotEmpty &&
-      (_isCollege && !_isStaff || _nameTextController.text.trim().isNotEmpty);
+  bool get _canContinue {
+    final admissionFilled = _anTextController.text.trim().isNotEmpty;
+    final nameFilled =
+        _isCollege && !_isStaff || _nameTextController.text.trim().isNotEmpty;
+    final parentFilled =
+        !_isTelangana || _parentNameTextController.text.trim().isNotEmpty;
+    return admissionFilled && nameFilled && parentFilled;
+  }
 
   @override
   void dispose() {
     _nameTextController.dispose();
     _anTextController.dispose();
     _sectionTextController.dispose();
+    _parentNameTextController.dispose();
     super.dispose();
   }
 
@@ -58,6 +67,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
         sectionName: _sectionTextController.text,
         transportType: _transportType,
         photoPath: filePath,
+        parentName: _parentNameTextController.text.trim(),
       ),
     );
   }
@@ -115,6 +125,23 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                       : null,
                   onChanged: (_) => setState(() {}),
                 ),
+                if (_isTelangana) ...[
+                  const AppFieldGap(),
+                  AppTextField(
+                    controller: _parentNameTextController,
+                    label: 'Parent Name',
+                    hint: 'Enter parent or guardian name',
+                    icon: Icons.family_restroom_outlined,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]')),
+                    ],
+                    textCapitalization: TextCapitalization.words,
+                    validator: (v) => v?.trim().isEmpty == true
+                        ? 'Please enter parent name'
+                        : null,
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ],
                 if (_isCollege && _isStaff) ...[
                   const AppFieldGap(),
                   AppTextField(

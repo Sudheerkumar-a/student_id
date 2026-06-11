@@ -178,7 +178,19 @@ class _ZonesTabBody extends StatelessWidget {
                 subtitle: zone.stateName,
                 icon: Icons.location_on_outlined,
                 onTap: () {
-                  final target = CatalogNavigation.onItemTap(args, zone, prefs);
+                  final effectiveState =
+                      (zone.stateName?.trim().isNotEmpty ?? false)
+                          ? zone.stateName!.trim()
+                          : stateTab.label;
+                  final target = CatalogNavigation.onItemTap(
+                    args,
+                    Zones(
+                      id: zone.id,
+                      name: zone.name,
+                      stateName: effectiveState,
+                    ),
+                    prefs,
+                  );
                   context.push(target.route, extra: target.extra);
                 },
               ),
