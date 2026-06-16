@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_id/core/config/app_flavor.dart';
 import 'package:student_id/core/utils/pref_utils.dart';
 import 'package:student_id/shared/presentation/widgets/staff_appbar_widget.dart';
 import 'package:student_id/features/catalog/domain/entities/zone.dart';
@@ -105,7 +106,10 @@ class CatalogNavigation {
 
   static String lookupIdFor(ListScreenArgs args) {
     if (args.listType == ListType.zones) {
-      return '${args.instituteType == InstituteType.schools ? 1 : 2}';
+      if (AppFlavor.isGeneric) {
+        return args.instituteType == InstituteType.schools ? '3' : '4';
+      }
+      return args.instituteType == InstituteType.schools ? '1' : '2';
     }
     return args.zoneId;
   }
