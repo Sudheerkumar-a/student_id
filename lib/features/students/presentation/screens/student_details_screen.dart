@@ -72,11 +72,13 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   bool _validateForm() {
+    final nameValid = _nameTextController.text.trim().isNotEmpty;
     final admissionValid = _anTextController.text.trim().isNotEmpty;
-    final parentValid = !_isTelangana ||
-        _parentNameTextController.text.trim().isNotEmpty;
+    final parentValid =
+        !_isTelangana || _parentNameTextController.text.trim().isNotEmpty;
 
     setState(() {
+      _isNameValid = nameValid;
       _isANValid = admissionValid;
       _isParentNameValid = parentValid;
     });
@@ -97,7 +99,6 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
               if (!_isCollege || _isStaff) ...{
                 TextFormField(
                   controller: _nameTextController,
@@ -106,9 +107,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                     FilteringTextInputFormatter.allow(RegExp('[a-zA-Z. ]')),
                   ],
                   decoration: InputDecoration(
-                    label: Text(
-                      _isStaff ? 'Teacher Name' : 'Student Name',
-                    ),
+                    label: Text(_isStaff ? 'Teacher Name' : 'Student Name'),
                     errorText: _isNameValid ? null : 'Please enter Name',
                   ),
                   style: const TextStyle(color: Colors.black, fontSize: 14),
@@ -137,7 +136,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                 style: const TextStyle(color: Colors.black, fontSize: 14),
               ),
               if (_isTelangana) ...{
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: _parentNameTextController,
                   keyboardType: TextInputType.name,
@@ -154,22 +153,23 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                   style: const TextStyle(color: Colors.black, fontSize: 14),
                 ),
               },
-              if (_isCollege && _isStaff) ...{
-                TextFormField(
-                  controller: _sectionTextController,
-                  keyboardType: TextInputType.name,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp('[0-9a-zA-Z]')),
-                  ],
-                  textCapitalization: TextCapitalization.characters,
-                  decoration: InputDecoration(
-                    label: const Text('Section'),
-                    errorText: _isANValid ? null : 'Please enter Section',
-                  ),
-                  style: const TextStyle(color: Colors.black, fontSize: 14),
+              const SizedBox(height: 10),
+              //if (_isCollege && _isStaff) ...{
+              TextFormField(
+                controller: _sectionTextController,
+                keyboardType: TextInputType.name,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp('[0-9a-zA-Z]')),
+                ],
+                textCapitalization: TextCapitalization.characters,
+                decoration: InputDecoration(
+                  label: const Text('Section'),
+                  //errorText: _isANValid ? null : 'Please enter Section',
                 ),
-                const SizedBox(height: 20),
-              },
+                style: const TextStyle(color: Colors.black, fontSize: 14),
+              ),
+              const SizedBox(height: 20),
+              //},
               if (!_isCollege || _isStaff) ...{
                 Text(
                   'Transport Type',
